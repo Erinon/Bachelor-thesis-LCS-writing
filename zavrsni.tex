@@ -30,19 +30,22 @@ Ljudi često prilikom zaključivanja i rješavanja problema koriste znanje već 
 
 
 \chapter{Pregled područja}
-LCS sustavi su sustavi temeljeni na pravilima.
+LCS \engl{Learning Classifier Systems} sustavi su sustavi temeljeni na pravilima, koji povezuju evolucijsko računarstvo i strojno učenje kako bi se što bolje prilagodili rješavanju danog problema.
+Sustav je u međudjelovanju sa nepoznatom okolinom, od koje pomoću osjetila dobiva ulaz, a preko djelovatelja nad njom izvršava određenu akciju \citep{4}.
 Sustav se sastoji od skupa određenog broja pravila koja zajedno rješavaju neki problem.
-Pravila su najčešće u obliku "\textbf{AKO} \emph{uvjet} \textbf{ONDA} \emph{akcija}".
+Bitno je naglasiti da poanta učenja nije pronaći jedno pravilo koje na kraju rješava dani problem, nego razviti cijelu populaciju pravila koja ga međusobno rješavaju.
+Pravila su najčešće u obliku "AKO \emph{uvjet} ONDA \emph{akcija}".
 Problemi su najčešće takvi da je prostor pretraživanja jako velik i nije moguće doslovno naučiti svaki primjer, nego je potrebna sposobnost generaliziranja.
 Prilikom istraživanja novih pravila koriste se tehnike evolucijskog računarstva.
 
 Evolucijsko računarsvo bavi se algoritmima pretraživanja temeljenima na prirodnoj selekciji.
 Ideja ovog pristupa je da se od početne proizvoljno generirane populacije jedinki, postupcima prirodne selekcije, križanja i mutacije, postupno generiraju bolje i prilagođenije jedinke.
-Detaljna razrada evolucijskog računarstva ne ulazi u opseg ovog rada, stoga on neće ovdje biti opisan.
+Detaljna razrada evolucijskog računarstva ne ulazi u opseg ovog rada, stoga ono ovdje neće biti detaljnije opisano.
 Više informacija čitatelj može pronaći u \citep{6}.
 
-Prilikom rada LCS sustava, pravila djeluju zajedno, ali neka su bolja i imaju veću sposobnost generalizacije od drugih.
-Prilikom određivanja koliko je koje pravilo \emph{dobro} koristimo potporno učenje.
+Prilikom rada LCS sustava, pravila djeluju zajedno, ali neka su \emph{bolja} i imaju veću sposobnost generaliziranja od drugih.
+Kako bi razlikovali različita pravila i u kojoj mjeri ona utječu na konačni ishod sustava, pravilima se dodjeljuju razni parametri.
+Ažuriranje tih parametara obavlja se tehnikama potpornog učenja, koje usmjerava potragu za boljima pravilima \citep{3}.
 
 Potporno učenje je učenje temeljeno na pokušajima, nakon kojih sustav dobije određenu brojčanu nagradu.
 U ovisnosti o nagradi, sustav podešava svoje parametre s ciljem povećavanja buduće nagrade te se na taj način prilagođava problemu kojeg rješava.
@@ -52,17 +55,8 @@ Dva glavna pristupa u implementaciji LCS sustava su \emph{Michigan-Style} LCS i 
 Glavna razlika je u tome što \emph{Pittsburgh-Style} LCS sustav koristi više skupova pravila, od kojih je svaki od tih skupova moguće konačno rješenje, a genetski algoritam djeluje na jednom cijelom skupu pravila. S obzirom da \emph{Pittsburgh-Style} LCS nije tema ovog rada, u nastavku je dan detaljniji opis \emph{Michigan-Style} LCS sustava.
 
 \emph{Michigan-Style} LCS (u nastavku samo LCS) sustav prvi je formalizirao John Holland i u suradnji sa Judith Reitman dao njegovu implementaciju.
-S obzirom na složenost originalnog LCS sustava, malo jednostavniju i razumljiviju verziju dao je Stewart W.
-Wilson pod nazivom ZCS (\emph{"zeroth-level" classifier system}).
+S obzirom na složenost originalnog LCS sustava, malo jednostavniju i razumljiviju verziju dao je Stewart W. Wilson pod nazivom ZCS (\emph{"zeroth-level" classifier system}).
 Nakon toga, Wilson je uveo još jednu verziju LCS sustava pod nazivom XCS, u kojemu je promijenio način na koji se računa \emph{fitness} pojedinih pravila. U nastavku slijedi opis navedenih verzija LCS sustava, koji se detaljnije može pročitati u \citep{3}.
-
-\section{Hollandov LCS}
-
-
-\section{Wilsonov ZCS}
-
-
-\section{Wilsonov XCS}
 
 
 \chapter{Opis problema}
@@ -71,7 +65,7 @@ Problemi testirani u ovom radu su:
     \item multipleksor,
     \item paritetni bit,
     \item najzastupljeniji bit,
-    \item bit prijenosa u binarnom zbrajalu
+    \item bit prijenosa binarnog zbrajala.
 \end{enumerate}
 
 Najviše pažnje posvećeno je rješavanju multipleksora.
@@ -102,6 +96,20 @@ U ovom primjeru prva dva bita, 01, označavaju da je izlaz iz multipleksora drug
     \end{tabular}
 \end{table}
 
+Problem paritetnog bita svodi se na ispitivanje broja pojavljivanja bita 1 unutar ulaza.
+Ako je broj pojavljivanja bita 1 paran, izlaz treba biti 1, a u suprotnom 0.
+Primjer 6-bitnog ulaza je 011010, gdje je broj pojavljivanja bita 1 3, stoga izlaz treba biti 0.
+
+Prilikom problema najzastupljenijeg bita, ispituje se frekvencija pojavljivanja pojedinih bitova.
+Izlaz je onaj bit koji se pojavljuje više puta.
+Na primjer, ako je 5-bitni ulaz 01101, bit 1 se pojavljuje 3 puta, a bit 0 2 puta, stoga izlaz treba biti 1.
+Ulaz za ovaj problem će uvijek biti neparne duljine, da izbjegnemo situaciju u kojoj se svaki bit pojavljuje jednak broj puta.
+
+U posljednjem problemu, izlaz mora biti bit prijenosa prilikom zbrajanja dva binarna broja jednake duljine.
+Osigurano je da je ulaz uvijek parne duljine, kako bi mogao biti podijeljen na dva binarna broja.
+Ako ulaz ima $n$ bitova, prvih $n / 2$ bitova odgovara prvom broju, a posljednjih $n / 2$ bitova drugom broju.
+Primjer ulaza za računanje prijenosa prilikom zbrajanja dva 3-bitna binarna broja je 011110, gdje je prvi broj 011, a drugi 110.
+Izlaz je ovdje 1, jer je nakon zbrajanja prijenos 1.
 
 \chapter{Opis algoritama} \label{algs}
 Prilikom razrade ovog sustava, bilo je potrebno ostvariti iskorištavanje znanja već naučenog na jednostavnijim problemima.
@@ -511,20 +519,58 @@ Na osi apscisa nalazi se broj do tad korištenih testnih primjera, a na osi ordi
 
 \begin{figure}
     \centering
-    \begin{subfigure}{0.46\textwidth}
+    \begin{subfigure}{0.496\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/37muxre.pdf}
-        \caption{Početno stanje igre. Igrači kreću na suprotnim stranama s 12 pijuna.}
-        \label{fig:starting_state}
+        \includegraphics[width=\textwidth]{img/multiplexer/6muxre.pdf}
+        \caption{Problem sa 6 bita.}
+        \label{fig:6muxre}
+    \end{subfigure}
+    %\hspace{0.05\textwidth}
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/multiplexer/11muxre.pdf}
+        \caption{Problem sa 11 bita.}
+        \label{fig:11muxre}
+    \end{subfigure} \\
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/multiplexer/20muxre.pdf}
+        \caption{Problem sa 20 bita.}
+        \label{fig:20muxre}
+    \end{subfigure}
+    %\hspace{0.05\textwidth}
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/multiplexer/37muxre.pdf}
+        \caption{Problem sa 37 bita.}
+        \label{fig:37muxre}
+    \end{subfigure}
+    \caption{Ponašanje sustava na problemu multipleksora.}
+    \label{fig:muxre}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/majority/3majre.pdf}
+        \caption{Problem sa 3 bita.}
+        \label{fig:3majre}
     \end{subfigure}
     \hspace{0.05\textwidth}
-    \begin{subfigure}{0.46\textwidth}
+    \begin{subfigure}{0.496\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/6muxre.pdf}
-        \caption{Bijeli je na potezu i mora preskakati s figurom na polju 18.}
-        \label{fig:game_state}
+        \includegraphics[width=\textwidth]{img/majority/5majre.pdf}
+        \caption{Problem sa 5 bita.}
+        \label{fig:5majre}
     \end{subfigure}
-    \caption{Primjeri stanja igre}
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/majority/7majre.pdf}
+        \caption{Problem sa 7 bita.}
+        \label{fig:7majre}
+    \end{subfigure}
+    \caption{Ponašanje sustava na problemu pronalaska bita s najvećom frekvencijom pojavljivanja.}
     \label{fig:states}
 \end{figure}
 
