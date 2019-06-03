@@ -1,6 +1,10 @@
 \documentclass[times, utf8, zavrsni]{fer}
 \usepackage{booktabs}
 \usepackage[unicode]{hyperref}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+\usepackage{multirow}
 
 \begin{document}
 
@@ -81,7 +85,7 @@ Na slici \ref{tree} prikazan je primjer jednog takvog binarnog stabla koje vrać
 Operacija je zbog jednostavnosti prikazana u \emph{postfix} obliku.
 Iz slike također vidimo da se u binarnom stablu ne moraju pojavljivati svi bitovi ulaza, a također i da se pojedini bitovi mogu pojavljivati više puta.
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=8cm]{img/tree.pdf}
 \caption{Primjer programskog isječka prikazanog binarnim stablom.}
@@ -91,7 +95,7 @@ Iz slike također vidimo da se u binarnom stablu ne moraju pojavljivati svi bito
 Potreban je i isječak koda koji označava \emph{don't care} simbol, a koji će za svaki niz bitova koje dobije na ulazu vratiti 1.
 On je prikazan na slici \ref{dnc} i označava operaciju $D_{0}D_{0}\sim|$, a preuzet je iz \citep{4}.
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[height=6cm]{img/dnc.pdf}
 \caption{Isječak koda korišten kao \emph{don't care} simbol.}
@@ -99,10 +103,346 @@ On je prikazan na slici \ref{dnc} i označava operaciju $D_{0}D_{0}\sim|$, a pre
 \end{figure}
 
 U \emph{Explore} načinu rada, na početku od okoline dobijemo ulazni podatak \emph{s}.
-U ovisnosti o \emph{s}, formira se \emph{match set} [\emph{M}].
+U ovisnosti o \emph{s}, formira se \emph{podudarni skup} \engl{Match set} [\emph{M}].
 [\emph{M}] se sastoji od svih pravila iz populacije [\emph{P}] koja odgovaraju ulazu \emph{s}.
 
-Za pravilo \emph{cl}\footnote{Od engleskog "\emph{Classifier}"} kažemo da odgovara ulazu \emph{s}, ako svaki isječak koda za zadani ulaz \emph{s} na izlazu daje 1.
+Za pravilo \emph{cl}\footnote{Od engleskog "\emph{Classifier}"} kažemo da odgovara ulazu \emph{s}, ako svaki programski isječak za zadani ulaz \emph{s} na izlazu daje 1.
+S obzirom da svaki programski isječak unutar uvjeta pravila na ulaz dobiva cijeli \emph{s}, poredak programskih isječaka uopće nije bitan.
+Algoritam \ref{match} prikazuje postupak evalucaije pravila \emph{cl} u odnosu na ulaz \emph{s}.
+Pri tome \emph{cf} označava \emph{i}-ti programski isječak unutar zadanog pravila \emph{cl}, a \emph{val} rezultat programskog isječka \emph{cf} s obzirom na zadani ulaz \emph{s}.
+\emph{n} je duljina uvjeta unutar pravila, odnosno broj programskih isječaka koji se nalaze u pravilu.
+\emph{cl.cond} je polje svih programskih isječaka.
+Algoritam vraća vrijednost \emph{true} ako svaki programski isječak za zadani ulaz \emph{s} vraća vrijednost 1, a \emph{false} inače.
+
+\begin{algorithm}
+\caption{Evaluiranje pravila $cl$ u odnosu na ulaz $s$}
+\label{match}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $cl$ -- pravilo, $s$ -- stanje okoline.}
+\STATE{\textbf{Izlaz:} odgovara li pravilo $cl$ stanju $s$}
+\FOR{($i := 0; i < n; i := i + 1$)}
+\STATE{$cf := cl.cond[i]$}
+\STATE{$val := evaluiraj(cf, s)$}
+\IF{$val \neq 1$}
+\RETURN{$false$}
+\ENDIF
+\ENDFOR
+\RETURN{$true$}
+\end{algorithmic}
+\end{algorithm}
+
+Nakon formiranja [\emph{M}], provjerava se sadrži li [\emph{M}] sve moguće akcije \emph{a}.
+U slučaju da za neku akciju ne postoji pripadno pravilo, pokreće se operacija pokrivanja \engl{Covering Operation}, prikazana algoritmom \ref{cover}.
+U operaciji pokrivanja stvara se novo pravilo čiji je svaki programski isječak \emph{don't care} simbol sa vjerojatnošću $P_{don'tCare}$, a sa vjerojatnošću $1 - P_{don'tCare}$ proizvoljno generirani programski isječak, koji s obzirom na stanje $s$ mora vraćati 1.
+U prikazanom algoritmu, $cl.action$ sadrži akciju koju zagovara pravilo $cl$.
+Operacija pokrivanja pokreće se za svaku akciju koja nedostaje u [\emph{M}], a novo pravilo se dodaje u  [\emph{P}] i [\emph{M}].
+
+\begin{algorithm}
+\caption{Operacija pokrivanja}
+\label{cover}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $s$ -- ulaz dobiven iz okoline, $a$ -- akcija koju se pokriva.}
+\STATE{\textbf{Izlaz:} Generirano novo pravilo $cl$}
+\STATE{$cl$ := inicijaliziraj novo pravilo}
+\FOR{($i := 0; i < n; i := i + 1$)}
+\STATE{$r$ := proizvoljan decimalni broj iz intervala [0, 1)}
+\IF{$r < P_{don'tCare}$}
+\STATE{$cl.cond[i]$ := \emph{don't care} simbol}
+\ELSE
+\REPEAT
+\STATE{$cf$ := generiraj proizvoljni programski isječak}
+\STATE{$val := evaluiraj(cf, s)$}
+\UNTIL{$val \neq 1$}
+\STATE{$cl.cond[i] := cf$}
+\ENDIF
+\ENDFOR
+\STATE{$cl.action := a$}
+\RETURN{$cl$}
+\end{algorithmic}
+\end{algorithm}
+
+Nakon svakog novog dodavanja pravila u [\emph{P}], pokreće se operacija brisanja \citep{1}.
+S obzirom da je potrebno zadržati maksimalnu veličinu populacije $N$, ako je trenutna veličina populacije veća od $N$, izabiru se pravila koja je potrebno izbrisati.
+Operacija brisanja prikazana je algoritmom \ref{del}.
+Pravilo se za brisanje odabire \emph{Roulette-Wheel} postupkom, na temelju glasova koje svako pravilo daje.
+\begin{algorithm}
+\caption{Operacija brisanja}
+\label{del}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $[P]$ -- populacija.}
+\STATE{\textbf{Izlaz:} -}
+\STATE{$velicinaPopulacije := \sum_{cl \in [P]} cl.n$}
+\IF{$velicinaPopulacije \leq N$}
+\RETURN
+\ENDIF
+\STATE{$prosjecniFitness := (\sum_{cl \in [P]} cl.F \cdot cl.n) / velicinaPopulacije$}
+\STATE{$sumaGlasova := 0$}
+\FOR{(pravilo $cl$ iz $[P]$)}
+\STATE{$sumaGlasova := sumaGlasova + glas(cl, prosjecniFitness)$}
+\ENDFOR
+\STATE{$r$ := proizvoljan decimalni broj iz intervala [0, 1)}
+\STATE{$odabir := r \cdot sumaGlasova$}
+\STATE{$sumaGlasova := 0$}
+\FOR{(pravilo $cl$ iz $[P]$)}
+\STATE{$sumaGlasova := sumaGlasova + glas(cl, prosjecniFitness)$}
+\IF{$odabir < sumaGlasova$}
+\IF{$cl.n > 1$}
+\STATE{$cl.n := cl.n - 1$}
+\ELSE
+\STATE{izbaci pravilo $cl$ iz populacije $[P]$}
+\ENDIF
+\RETURN
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+Postupak izračuna glasova prikazan je algoritmom \ref{vote}.
+Glas svakog pravila temelji se na prosječnoj veličini akcijskog skupa.
+Razlog tomu je pokušaj ostvarenja približno jednakih veličina akcijskih skupova.
+Također, ako je pravilo dovoljno iskusno, a $fitness$ pravila je znatno manji od prosječnog $fitness$-a, vjerojatnost njegovog izbacivanja se dodatno povećava u ovisnosti o $fitness$-u.
+Time je osigurano izbacivanje lošijih pravila.
+Iskustvo pravila $cl$ određeno je brojem pojavljivanja tog pravila unutar akcijskog skupa i pamti se u varijabli $cl.exp$.
+Konstanta $\theta_{del}$ određuje granicu iskustva nakon koje se može reći da je pravilo dovoljno iskusno za brisanje.
+Konstanta $\delta$ (iz intervala (0, 1]) određuje minimalni postotak prosječnog $fitness$-a populacije kojega pravilo mora imati da se njegov glas ne bi dodatno povećao.
+Vjerojatnost odabira svakog pravila prilikom \emph{Roulette-Wheel} postupka jednaka je postotku glasa tog pravila u odnosu na ukupnu sumu glasova.
+Nakon što je pravilo $cl$ izabrano za brisanje, provjerava se njegova brojnost \engl(numerosity) sadržana u $cl.n$.
+Ako je brojnost pravila veća od 1, ona se samo umanjuje za 1.
+U suprotnom, pravilo se izbacuje iz populacije.
+
+\begin{algorithm}
+\caption{Glas}
+\label{vote}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $cl$ -- pravilo čiji glas računamo, $prosjecniFitness$ -- prosječni $fitness$ populacije.}
+\STATE{\textbf{Izlaz:} $glas$ -- glas pravila $cl$}
+\STATE{$vote := cl.as \cdot cl.n$}
+\IF{$cl.exp > \theta_{del}$ and $cl.F / cl.n < \delta \cdot prosjecniFitness$}
+\STATE{$vote := vote \cdot prosjecniFitness / (cl.F / cl.n)$}
+\ENDIF
+\RETURN{$glas$}
+\end{algorithmic}
+\end{algorithm}
+
+Nakon formiranja podudarnog skupa [\emph{M}], potrebno je odrediti akciju koju će sustav izvršiti.
+Akcija se određuje na temelju pravila sadržanih u [\emph{M}].
+Za svaku akciju, potrebno je izračunati srednju vrijednost nagrade koju sustav očekuje izvršavanjem te akcije.
+Ona se označava funkcijom $P(a)$ i računa po formuli \eqref{eq:pred}.
+\begin{equation}
+\label{eq:pred}
+P(a) = \frac{\sum_{cl \in [M] \land cl.a = a} cl.p \cdot cl.F \cdot cl.n}{\sum_{cl \in [M] \land cl.a = a} cl.F \cdot cl.n}
+\end{equation}
+Vrijednosti $P(a)$ za svaku moguću akciju tvore \emph{polje predviđanja} \engl{prediction array}.
+Ovisno o vrijednostima $P(a)$, \emph{Roulette-Wheel} postupkom se izabire konačna akcija koju sustav izvršava\footnote{
+Akcija može biti izabrana i nekim drugim postupkom, npr. proizvoljno (\emph{pure exploration}) ili se može odabrati akcija s najvećom $P(a)$ vrijednosti (\emph{pure exploitation}).
+Također, može se koristiti proizvoljna akcija sa određenom vjerojatnošću, a u suprotnom najbolja.
+Takav postupak odgovarao bi \emph{$\epsilon$-greedy} postupku odabira u potpornom učenju, gdje bi $\epsilon$ vrijednost odgovarala vjerojatnosti odabira proizvoljne akcije, kako je navedeno u \citep{1}.}.
+Vjerojatnost da će akcija $a$ biti izabrana proporcionalna je vrijednosti $P(a)$.
+
+Nakon odabira akcije $a$, formira se akcijski skup \engl{Action set} [\emph{A}].
+[\emph{A}] se sastoji od svih pravila iz [\emph{M}] koja zagovaraju $a$.
+Nakon formiranja akcijskog seta izvršava se odabrana akcija $a$ i u ovisnosti o izvršenoj akciji od okoline stiže nagrada $R$.
+
+Po dobitku nagrade, dolazi do ažuriranja parametara svih pravila sadržanih u [\emph{A}].
+Redom se ažuriraju iskustvo pravila \engl{Experience} $exp$, njegovo predviđanje \engl{Prediction} $p$, pogreška u predviđanju \engl{Prediction error} $\epsilon$, preciznost \engl{Accuracy} $\kappa$, relativna preciznost \engl{Relative accuracy} $\kappa'$, \emph{fitness} $F$ i prosječna veličina akcijskih skupova koji su sadržavali to pravilo \engl{Action set size} $as$.
+Iskustvo pravila $cl$, $cl.exp$, je broj pojavljivanja $cl$ u akcijskom skupu i ažurira se po formuli \eqref{eq:exp}.
+\begin{equation}
+\label{eq:exp}
+cl.exp := cl.exp + 1
+\end{equation}
+Predviđanje pravila, $cl.p$ procjenjuje nagradu koju sustav očekuje podudaranjem pravila i izvođenjem akcije koju ono zagovara.
+Ažurira se po uzoru na Q-učenje, u ovisnosti o dobivenoj nagradi $R$, po formuli \eqref{eq:p}, gdje je $\beta$ realan broj iz intervala $(0, 1]$ i naziva se stopa učenja \engl{learning rate}.
+\begin{equation}
+\label{eq:p}
+cl.p := cl.p + \beta \cdot (R - cl.p)
+\end{equation}
+Pogreška u predviđanju ažurira se u ovisnosti o nagradi $R$ i predviđanju pravila $p$ po formuli \eqref{eq:err}.
+\begin{equation}
+\label{eq:err}
+cl.\epsilon := cl.\epsilon + \beta \cdot (|R - cl.p| - cl.\epsilon)
+\end{equation}
+Prije ažuriranja $fitness$-a $F$ pravila, najprije je potrebno izračunati njegovu preciznost $\kappa$, te ju zatim normalizirati s obzirom na preciznosti ostalih pravila unutar akcijskog skupa, odnosno izračunati relativnu preciznost $\kappa'$.
+\begin{equation}
+\label{eq:acc}
+cl.\kappa :=
+\begin{cases}
+1 &\ \mbox{, ako je } \epsilon < \epsilon_{0} \\
+\alpha \cdot \left( \frac{\epsilon}{\epsilon_{0}} \right)^{-\nu} &\ \mbox{, inače}
+\end{cases}
+\end{equation}
+\begin{equation}
+\label{eq:racc}
+cl.\kappa' := \frac{\kappa}{\sum_{c \in [A]} c.\kappa}
+\end{equation}
+Pri tome, parametri $\alpha$ $(0 < \alpha < 1)$ i $\nu$ $(\nu > 0)$ kontroliraju brzinu propadanja preciznosti \citep{5}.
+Parametar $\epsilon_{0}$ određuje granicu do koje najviše može doći pogreška u predviđanju $\epsilon$, a da bi se za pravilo moglo reći da je potpuno precizno.
+Ako za pravilo $cl$ vrijedi da je $cl.\epsilon < \epsilon_{0}$, njegova preciznost postaje 1 ($cl.\kappa = 1$), a u suprotnom preciznost ekponencijalno opada ovisno o parametrima $\alpha$ i $\nu$, što je prikazano formulom \eqref{eq:acc}.
+Nakon što su izračunate preciznosti svih pravila unutar akcijskog seta [\emph{A}], svaka preciznost se normira ukupnom sumom preciznosti, kao što je prikazano formulom \eqref{eq:racc}.
+Kada je izračunata relativna preciznost, $fitness$ se ažurira prema formuli \eqref{eq:fit}.
+\begin{equation}
+\label{eq:fit}
+cl.F := cl.F + \beta \cdot (\kappa' - cl.F)
+\end{equation}
+$Fitness$ vrijednost pravila je procjena njegove preciznosti s obzirom na ostala pravila iz [\emph{A}].
+\begin{figure}[h]
+\centering
+\includegraphics[height=6cm]{img/fit.pdf}
+\caption{Funkcija ovisnosti preciznosti $\kappa$ o pogrešci u predviđanju $\epsilon$. Slika preuzeta iz \citep{5}}
+\label{img:fit}
+\end{figure}
+Na slici \ref{img:fit} vidi se utjecaj pojedinih parametara prilikom računanja preciznosti $\kappa$.
+Parametar $\epsilon_{0}$ određuje do koje granice će pravila imati jednaku, maksimalnu, preciznost, parametar $\alpha$ uvodi značajnu razliku između preciznih i manje preciznih pravila, a parametri $\nu$ i ponovno $\epsilon_{0}$ određuju brzinu opadanja preciznosti.
+
+Nakon postavljanja parametara, postoji mogućnost za pokretanjem operacije istraživanja novih pravila \engl{Discovery component}.
+Svako pravilo dodatno sadrži i parametar koji pamti kada je zadnji put pravilo sudjelovalo u akcijskom setu nad kojim se provela operacija istraživanja novih pravila.
+Operacija otkrivanja novih pravila provodi se ukoliko je prosječno vrijeme proteklo od prošlog pokretanja operacije otkrivanja na pravilima unutar akcijskog seta veće od vremena određenog konstantom $\theta_{GA}$.
+Ukoliko to nije zadovoljeno, ovaj se korak preskače.
+
+Prilikom operacije otkrivanja, najprije se iz akcijskog skupa izabiru dva roditeljska pravila.
+Odabir roditeljskih pravila ostvaren je turnirskom selekcijom \engl{Tournament selection} u ovisnosti o $fitness$ parametru.
+Prilikom turnirske selekcije, nasumično se odabire unaprijed zadani broj pravila, te se kao pobjednika odabire ono koje od odabranih ima najveću $fitness$ vrijednost.
+Od izabranih roditeljskih pravila stvaraju se dva potomka, od kojih prvotno svaki ima iste programske isječke uvjeta kao jedan od roditelja.
+
+Nakon toga, sa vjerojatnošću $\chi$ provodi se križanje \engl{Crossover} potomaka.
+Križanje je ostvarenom operacijom križanja u dvije točke \engl{Two-point crossover} kako je prikazano algoritmom \ref{alg:cross}.
+\begin{algorithm}[h]
+\caption{Križanje u dvije točke}
+\label{alg:cross}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $cl_{1}$ -- prvo pravilo, $cl_{2}$ -- drugo pravilo.}
+\STATE{\textbf{Izlaz:} -}
+\STATE{$x :=$ proizvoljan decimalni broj iz intervala [0, n)}
+\STATE{$y :=$ proizvoljan decimalni broj iz intervala [0, n)}
+\IF{$x > y$}
+\STATE{zamijeni $x$ i $y$}
+\ENDIF
+\FOR{$(i = x; i <= y; i = i + 1)$}
+\STATE{zamijeni $cl_{1}.cond[i]$ i $cl_{2}.cond[i]$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+Prilikom križanja u dvije točke, proizvoljno se odabiru dva mjesta unutar uvjeta pravila koja se križaju, te se zamjene svi programski isječci između njih.
+Unutar algoritma, varijabla $n$ sadrži duljinu uvjeta, odnosno broj programskih isječaka.
+Programski isječci se ovdje ne mijenjaju, samo se razmjenjuju između potomaka.
+Također, prilikom operacije križanja, akcije koje pravila zagovaraju se ne mijenjaju.
+
+Nakon toga, nad potomcima se provodi mutacija, u kojoj svaki programski isječak uvjeta ima vjerojatnost mutacije $\mu$.
+Mutacija, za razliku od križanja, djeluje i na uvjete pravila i na akcije.
+Tijekom mutacije, svaki \emph{don't care} simbol zamjenjuje se proizvoljno generiranim programskim isječkom koji odgovara stanju $s$ dobivenom iz okoline, a svaki drugi programski isječak zamjenjuje se \emph{don't care} simbolom.
+Na poslijetku, akcije potomaka također bivaju mutirane s vjerojatnošću $\mu$, pri čemu se akcija mijenja u bilo koju drugu akciju (u ovom radu su jedine moguće akcije 0 ili 1, stoga 0 postaje 1, a 1 postaje 0).
+Nakon mutacije, mutirani potomak još uvijek odgovara stanju $s$.
+Operacija mutacije prikazana je algoritmom \ref{alg:mut}
+\begin{algorithm}[h]
+\caption{Mutacija}
+\label{alg:mut}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $cl$ -- pravilo nad kojim se provodi mutacija, $s$ -- stanje okoline.}
+\STATE{\textbf{Izlaz:} -}
+\FOR{$(i = 1; i <= n; i = i + 1)$}
+\STATE{$r :=$ proizvoljan decimalni broj iz intervala [0, 1)}
+\IF{$r < \mu$}
+\IF{$cl.cond[i] =$ \emph{don't care} simbol}
+\REPEAT
+\STATE{$cf$ := generiraj proizvoljni programski isječak}
+\STATE{$val := evaluiraj(cf, s)$}
+\UNTIL{$val \neq 1$}
+\STATE{$cl.cond[i] := cf$}
+\ELSE
+\STATE{$cl.cond[i]$ := \emph{don't care} simbol}
+\ENDIF
+\ENDIF
+\ENDFOR
+\STATE{$r :=$ proizvoljan decimalni broj iz intervala [0, 1)}
+\IF{$r < \mu$}
+\STATE{$cl.action :=$ proizvoljna akcija različita od $cl.action$}
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+Na kraju operacije istraživanja, predviđanje novonastalih potomaka postavlja se na srednju vrijednost predviđanja roditelja, pogreška u predviđanju postavlja se na srednju vrijednost pogreške u predviđanju roditelja pomnoženu faktorom $predictionErrorReduction$, a $fitness$ na srednju vrijednost $fitness$-a roditelja pomnoženu faktorom $fitnessReduction$, kao što je navedeno u \citep{4}.
+
+Prije dodavanja nastalih potomaka u populaciju, pokreće se operacija provjere obuhvaća li neki od roditelja potomke \engl{GA subsumption}.
+Roditelj obuhvaća potomka, ako uvjet roditelja logički obuhvaća uvjet potomka.
+Razlog ovoj operaciji je taj što u slučaju da roditelj obuhvaća potomka, dodavanjem potomka u populaciju ne bi se poboljšala sposobnost sustava, jer roditelj sadrži sve informacije koje sadrži i potomak \citep{1}.
+Da bi se uopće mogla pokrenuti provjera, roditelj mora biti precizan i dovoljno iskusan.
+Konstanta $\theta_{sub}$ sadrži donju granicu iskustva pravila da bi se za njega moglo reći da je dovoljno iskusno za ovu operaciju, dok konstanta $\epsilon_{0}$ sadrži gornju granicu pogreške u predviđanju pravila da bi ono bilo dovoljno precizno.
+Roditelj može obuhvatiti potomka ako oba pravila zagovaraju istu akciju, ako je roditelj precizan i dovoljno iskusan i ako je roditelj općenitiji od potomka.
+Uvođenjem programskih isječaka umjesto ternarnih simbola u uvjete pravila, maknuta je važnost poretka programskih isječaka unutar uvjeta.
+Iz tog razloga, prilikom ispitivanja je li roditelj općenitiji od djeteta u obzir su uzeti skupovi programskih odsječaka \citep{4}.
+Operacija provjere je li jedno pravilo općenitije od drugog prikazana je algoritmom \ref{alg:general}
+\begin{algorithm}
+\caption{Općenitije pravilo}
+\label{alg:general}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $cl_{1}$ -- općenitije pravilo, $cl_{2}$ -- specifičnije pravilo.}
+\STATE{\textbf{Izlaz:} -- je li pravilo $cl_{1}$ općenitije od $cl_{2}$}
+\STATE{$x :=$ broj \emph{don't care} simbola u $cl_{1}$}
+\STATE{$y :=$ broj \emph{don't care} simbola u $cl_{2}$}
+\IF{$x \leq y$}
+\RETURN{$false$}
+\ENDIF
+\STATE{$X :=$ skup svih "ne-\emph{don't care}" isječaka u $cl_{1}$}
+\STATE{$Y :=$ skup svih "ne-\emph{don't care}" isječaka u $cl_{2}$}
+\IF{$X \not \subseteq Y$}
+\RETURN{$false$}
+\ENDIF
+\RETURN{$true$}
+\end{algorithmic}
+\end{algorithm}
+Da bi pravilo $cl_{1}$ bilo općenitije od pravila $cl_{2}$, $cl_{1}$ mora imati više \emph{don't care} simbola od pravila $cl_{2}$, a svaki ostali programski isječak pravila $cl_{1}$ mora biti sadržan u $cl_{2}$.
+Ako se pokaže da roditelj obuhvaća potomka, umjesto dodavanja tog potomka u populaciju, roditelju se parametar brojnosti povećava za 1.
+
+Nakon provjere obuhvaća li roditelj potomka, pokreće se provjera obuhvaćanja unutar cijelog akcijskog skupa [\emph{A}].
+Pretražuje se akcijski skup i pronalazi se pravilo koje je precizno i dovoljno iskusno, a ima najveći udio \emph{don't care} simbola.
+Da bi pravilo bilo precizno i dovoljno iskusno za obuhvaćanje drugih pravila, ono mora ispunjavati isti uvjet kao i u prethodnom koraku.
+Nakon pronalaženja takvog pravila $cl$, ponovno se prolazi kroz akcijski skup i za svako pravilo $c$ od kojega je $cl$ općenitije, pravilu $cl$ se brojnost povećava za brojnost pravila $c$, a pravilo $c$ se briše iz populacije.
+
+Nadalje, prilikom dodavanja novog pravila $cl$ u populaciju, potrebno je proći kroz ostala pravila u populaciji i provjeriti postoji li već pravilo koje je jednako pravilu $cl$.
+Ako takvo pravilo postoji, $cl$ se ne dodaje u populaciju, nego pronađenom pravilu brojnost poveća za 1.
+Postupak provjere jednakosti pravila također je drugačiji u odnosu na klasični XCS sustav.
+Ponovno nije bitno da poredak programskih isječaka u pravilima bude jednak, nego da pravila sadrže jednake isječke, neovisno o poziciji.
+Postupak provjere jednakosti pravila prikazan je algoritmom \ref{alg:eq}.
+\begin{algorithm}
+\caption{Jednakost pravila}
+\label{alg:eq}
+\begin{algorithmic}
+\STATE{\textbf{Ulaz:} $cl_{1}$ -- prvo pravilo, $cl_{2}$ -- drugo pravilo.}
+\STATE{\textbf{Izlaz:} -- je li pravilo $cl_{1}$ općenitije od $cl_{2}$}
+\IF{$cl_{1}.action \neq cl_{2}.action$}
+\RETURN{$false$}
+\ENDIF
+\STATE{$x :=$ broj \emph{don't care} simbola u $cl_{1}$}
+\STATE{$y :=$ broj \emph{don't care} simbola u $cl_{2}$}
+\IF{$x \neq y$}
+\RETURN{$false$}
+\ENDIF
+\STATE{$X :=$ skup svih "ne-\emph{don't care}" isječaka u $cl_{1}$}
+\STATE{$Y :=$ skup svih "ne-\emph{don't care}" isječaka u $cl_{2}$}
+\IF{$X \neq Y$}
+\RETURN{$false$}
+\ENDIF
+\RETURN{$true$}
+\end{algorithmic}
+\end{algorithm}
+Da bi pravila bila jednaka, ona moraju zagovarati istu akciju, moraju imati jednak broj \emph{don't care} simbola i skupovi ostali programskih isječaka tih pravila moraju biti jednaki.
+
+\begin{table}[htb]
+\caption{Ponovno korištenje naučenog znanja}
+\label{tbl:reuse}
+\centering
+\begin{tabular}{c | c | c}
+\multirow{2}{*}{Multipleksor} & \multicolumn{2}{c}{Programski isječak} \\
+& Ime & Izraz \\ \hline
+\multirow{3}{*}{MUX 4/1} & L1\_0 & $D_{1}D_{0}D_{4}dr$ \\
+& L1\_1 & $D_{5}\sim D_{1}D_{0}\&\&$ \\
+& ... & ... \\ \hline
+\multirow{3}{*}{MUX 8/1} & L2\_0 & $L1\_15D_{2}L1\_4r\&$ \\
+& L2\_1 & $L1\_5D_{7}|L1\_11D_{3}\&r$ \\
+& ... & ... \\ \hline
+\multirow{3}{*}{MUX 16/1} & L3\_0 & $L2\_9L1\_7D_{11}|r$ \\
+& L3\_1 & $L1\_10D_{17}|L2\_1D_{0}r\&$ \\
+& ... & ... \\
+\end{tabular}
+\end{table}
 
 \chapter{Rezultati}
 
