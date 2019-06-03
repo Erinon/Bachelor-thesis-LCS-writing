@@ -258,7 +258,9 @@
          id="tspan5633"
          x="23.434525"
          y="84.388397"
-         style="font-size:7.05555534px;stroke-width:0.26458332">D0</tspan></text>
+         style="font-size:7.05555534px;stroke-width:0.26458332">D<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan9403">0</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -269,7 +271,9 @@
          id="tspan5637"
          x="23.62351"
          y="94.59375"
-         style="font-size:7.05555534px;stroke-width:0.26458332">D1</tspan></text>
+         style="font-size:7.05555534px;stroke-width:0.26458332">D<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan9405">1</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -280,7 +284,9 @@
          id="tspan5645"
          x="23.623512"
          y="114.4375"
-         style="font-size:7.05555534px;stroke-width:0.26458332">D3</tspan></text>
+         style="font-size:7.05555534px;stroke-width:0.26458332">D<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan9409">3</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -291,7 +297,9 @@
          id="tspan5649"
          x="71.815475"
          y="136.54912"
-         style="font-size:7.05555534px;stroke-width:0.26458332">S0</tspan></text>
+         style="font-size:7.05555534px;stroke-width:0.26458332">S<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan9413">0</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -302,7 +310,9 @@
          id="tspan5653"
          x="57.641365"
          y="140.32886"
-         style="font-size:7.05555534px;stroke-width:0.26458332">S1</tspan></text>
+         style="font-size:7.05555534px;stroke-width:0.26458332">S<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan9411">1</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -313,7 +323,9 @@
          id="tspan5657"
          x="23.434525"
          y="104.61012"
-         style="font-size:7.05555534px;stroke-width:0.26458332">D2</tspan></text>
+         style="font-size:7.05555534px;stroke-width:0.26458332">D<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan9407">2</tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
