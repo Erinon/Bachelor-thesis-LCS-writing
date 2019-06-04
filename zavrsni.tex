@@ -35,6 +35,9 @@ Sustav je u međudjelovanju sa nepoznatom okolinom, od koje pomoću osjetila dob
 Sustav se sastoji od skupa određenog broja pravila koja zajedno rješavaju neki problem.
 Bitno je naglasiti da poanta učenja nije pronaći jedno pravilo koje na kraju rješava dani problem, nego razviti cijelu populaciju pravila koja ga međusobno rješavaju.
 Pravila su najčešće u obliku "AKO \emph{uvjet} ONDA \emph{akcija}".
+Uvjet pravila većinom je tvoren od znakova ternarne abecede {0, 1, \#}.
+Znakovi 0 i 1 moraju se podudarati sa odgovarajućim znakovima ulaza, dok se znak \# podudara sa bilo kojim znakom.
+Znak \# zovemo \emph{don't care simbolom} \engl{don't care symbol}\footnote{U literaturi se još može naći naziv \emph{wildcard}.} i on omogućava generaliziranje.
 Problemi su najčešće takvi da je prostor pretraživanja jako velik i nije moguće doslovno naučiti svaki primjer, nego je potrebna sposobnost generaliziranja.
 Prilikom istraživanja novih pravila koriste se tehnike evolucijskog računarstva.
 
@@ -55,17 +58,17 @@ Dva glavna pristupa u implementaciji LCS sustava su \emph{Michigan-Style} LCS i 
 Glavna razlika je u tome što \emph{Pittsburgh-Style} LCS sustav koristi više skupova pravila, od kojih je svaki od tih skupova moguće konačno rješenje, a genetski algoritam djeluje na jednom cijelom skupu pravila. S obzirom da \emph{Pittsburgh-Style} LCS nije tema ovog rada, u nastavku je dan detaljniji opis \emph{Michigan-Style} LCS sustava.
 
 \emph{Michigan-Style} LCS (u nastavku samo LCS) sustav prvi je formalizirao John Holland i u suradnji sa Judith Reitman dao njegovu implementaciju.
-S obzirom na složenost originalnog LCS sustava, malo jednostavniju i razumljiviju verziju dao je Stewart W. Wilson pod nazivom ZCS (\emph{"zeroth-level" classifier system}).
-Nakon toga, Wilson je uveo još jednu verziju LCS sustava pod nazivom XCS, u kojemu je promijenio način na koji se računa \emph{fitness} pojedinih pravila. U nastavku slijedi opis navedenih verzija LCS sustava, koji se detaljnije može pročitati u \citep{3}.
-
+S obzirom na složenost originalnog LCS sustava, malo jednostavniju i razumljiviju inačicu dao je Stewart W. Wilson pod nazivom ZCS (\emph{"zeroth-level" classifier system}).
+Nakon toga, Wilson je uveo još jednu inačicu LCS sustava pod nazivom XCS, u kojemu je promijenio način na koji se računa $dobrota$ pojedinih pravila.
+U sklopu ovog rada obrađen je sustav XCS, koji je detaljno objašnjen u poglavljima koja slijede, a za detaljniji opis LCS i ZCS sustava čitatelj se upućuje na \citep{3}.
 
 \chapter{Opis problema}
 Problemi testirani u ovom radu su:
 \begin{enumerate}
-    \item multipleksor,
-    \item paritetni bit,
-    \item najzastupljeniji bit,
-    \item bit prijenosa binarnog zbrajala.
+    \item multipleksor \engl{multiplexer},
+    \item paritetni bit \engl{parity},
+    \item najzastupljeniji bit \engl{majority-on},
+    \item bit prijenosa binarnog zbrajala \engl{carry}.
 \end{enumerate}
 
 Najviše pažnje posvećeno je rješavanju multipleksora.
@@ -515,41 +518,51 @@ Prilikom testiranja rada sustava, korištene vrijednosti parametara sustava su p
 Stopa učenja $\beta = 0.2$, stopa propadanja dobrote $\alpha = 0.1$, granica pogreške predviđanja $\epsilon_{0} = 10$, eksponent propadanja dobrote $\nu = 5$, granica prosječnog proteklog vremena prilikom istraživanja novih pravila $\theta_{GA} = 25$, vjerojatnost križanja u dvije točke $\chi = 0.8$, vjerojatnost mutacije $\mu$, granica iskustva pri brisanju klasifikatora $\theta_{del} = 20$, postotak srednje vrijednosti dobrote prilikom brisanja $\delta = 0.1$, granica iskustva prilikom obuhvaćanja $\theta_{sub} = 20$, vjerojatnost pojavljivanja \emph{don't care} simbola $P_{don'tCare} = 0.33$, propadanje pogreške predviđanja $predictionErrorReduction = 0.25$, propadanje dobrote $fitnessReduction = 0.1$.
 Veličina turnira prilikom turnirske selekcije je $40\%$ veličine djelotvornog skupa.
 Nagrada okoline iznosi 1000 za ispravnu klasifikaciju, a 0 za neispravnu.
+Prilikom generiranja novih programskih isječaka, terminalni čvor ima 50\% vjerojatnosti poprimanja programskog isječka naučenog na nižim razinama.
 Na osi apscisa nalazi se broj do tad korištenih testnih primjera, a na osi ordinata pomični udio točno klasificiranih primjera prilikom prethodnih 1000 \emph{exploit} iteracija.
 
-\begin{figure}
+Sva testiranja odrađena su na AMD A10-8700p četverojezgrenom procesoru frekvencije 1.8 GHz i radnoj memoriji od 12 GB.
+
+\begin{figure}[h]
     \centering
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/6muxre.pdf}
-        \caption{Problem sa 6 bita.}
+        \caption{4/1 multipleksor.}
         \label{fig:6muxre}
     \end{subfigure}
     %\hspace{0.05\textwidth}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/11muxre.pdf}
-        \caption{Problem sa 11 bita.}
+        \caption{8/1 multipleksor.}
         \label{fig:11muxre}
-    \end{subfigure} \\
+    \end{subfigure}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/20muxre.pdf}
-        \caption{Problem sa 20 bita.}
+        \caption{16/1 multipleksor.}
         \label{fig:20muxre}
     \end{subfigure}
     %\hspace{0.05\textwidth}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/37muxre.pdf}
-        \caption{Problem sa 37 bita.}
+        \caption{32/1 multipleksor.}
         \label{fig:37muxre}
     \end{subfigure}
     \caption{Ponašanje sustava na problemu multipleksora.}
     \label{fig:muxre}
 \end{figure}
+Na slici \ref{fig:muxre} prikazani su grafovi ponašanja sustava na problemu multipleksora.
+Veličina populacije $N$ redom je 500, 1000, 2000, 5000 za 4/1, 8/1, 16/1 odnosno 32/1 multipleksor.
+4/1, 8/1 i 16/1 multipleksori trenirani su na $5 \cdot 10^{5}$ testnih primjera, a 32/1 na $10^{6}$.
+Treniranje za 4/1, 8/1 i 16/1 multipleksor trajalo je ukupno oko 7 minuta, dok je treniranje 32/1 multipleksora trajalo otprilike 50 minuta.
+Broj mogućih različitih primjera 32/1 multipleksora je $2^{37} \approx 10^{11}$.
+Iz slike \ref{fig:37muxre} se vidi da je već nakon otprilike $3 \cdot 10^{5}$ testnih primjera točnost sustava oko 90\%
+Iako je prostor pretraživanja jako velik, XCSCFC se na njemu ponaša poprilično dobro.
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \begin{subfigure}{0.496\textwidth}
         \centering
@@ -557,7 +570,6 @@ Na osi apscisa nalazi se broj do tad korištenih testnih primjera, a na osi ordi
         \caption{Problem sa 3 bita.}
         \label{fig:3majre}
     \end{subfigure}
-    \hspace{0.05\textwidth}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/majority/5majre.pdf}
@@ -571,11 +583,64 @@ Na osi apscisa nalazi se broj do tad korištenih testnih primjera, a na osi ordi
         \label{fig:7majre}
     \end{subfigure}
     \caption{Ponašanje sustava na problemu pronalaska bita s najvećom frekvencijom pojavljivanja.}
-    \label{fig:states}
+    \label{fig:majre}
 \end{figure}
+Rezultati dobiveni na problemu najzastupljenijeg bita prikazani su na slici \ref{fig:majre}.
+Veličina populacije $N$ ovdje je redom 500, 1000 i 2000 za 3-, 5- i 7-bitni problem.
+Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
+Prostor pretraživanja je ovdje znatno manji od onoga u problemu s multipleksorom, rezultati nisu znatno bolji.
+Zanimljivo je primjetiti da je sustav ovdje bolje naučio 7-bitni (slika \ref{fig:7majre}) problem nego 3-bitni (slika \ref{fig:3majre}), a prostor pretraživanja u 7-bitnom problemu je 16 puta veći.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/parity/2pare.pdf}
+        \caption{Problem sa 2 bita.}
+        \label{fig:2pare}
+    \end{subfigure}
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/parity/3pare.pdf}
+        \caption{Problem sa 3 bita.}
+        \label{fig:3pare}
+    \end{subfigure}
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/parity/4pare.pdf}
+        \caption{Problem sa 4 bita.}
+        \label{fig:4pare}
+    \end{subfigure}
+    \begin{subfigure}{0.496\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/parity/5pare.pdf}
+        \caption{Problem sa 5 bita.}
+        \label{fig:5pare}
+    \end{subfigure}
+    \caption{Ponašanje sustava na problemu parnog pariteta.}
+    \label{fig:pare}
+\end{figure}
+Rezultati na problemu parnog pariteta prikazani su na slici \ref{fig:pare}.
+Veličina populacije $N$ redom je 200, 300, 400, 500 za 2-, 3-, 4- i 5-bitni problem.
+Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
+Iz slike se vidi da je problem sa 2 bita (slika \ref{fig:2pare}) riješen sa jako velikom točnošću, ali zbog toga što je vjerojatno naučen na pamet.
+Iz slike \ref{fig:3pare} se vidi da se već prilikom učenja za 3 bita javljaju problemi.
+Na problemu sa 5 bita (\ref{fig:5pare}) sustav nije uspio ništa generalizirati i rezultat je skroz proizvoljan.
 
 \chapter{Zaključak}
+XCS sustav pokazao se kao vrlo složen, koji za neke probleme (npr. multipleksor) radi iznimno dobro, a za neke (npr. paritet) poprilično loše.
 
+Zbog podjele sustava u više dijelova koji slijedno djeluju, otvara se puno prostora za isprobavanje.
+Sustav ima brojne parametre s kojima se može eksperimentirati i prilagoditi ga problemu koji se rješava.
+
+U okviru ovog rada isproban je rad sustava samo na booleovim funkcijama, ali one predstavljaju temelj za nastavak rada na složenijim problemima.
+Budući rad na ovom sustavu može uključivati prilagodbu sustava za klasifikaciju (npr. jednostavnih slika) u više razreda.
+
+Ovaj rad je motiviran radom prikazanim u \citep{4}, no ovdje su rezultati nešto lošiji nego što je prikazano u navedenom radu.
+Razlog je najvjerojatnije taj što neki dijelovi nisu najdetaljnije objašnjeni, ali glavna poanta rada je usvojena.
+
+Na primjeru multipleksora pokazano je da korištenje znanja prethodno naučenog na jednostavnijim primjerima unutar iste domene poboljšava rezultate sustava.
+Znanje sa nižih razina uspješno je sakupljeno i proslijeđeno prilikom učenja na težim problemima u domeni.
 
 \bibliography{literatura}
 \bibliographystyle{fer}
