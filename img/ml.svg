@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="174.38893mm"
+   height="50.646156mm"
+   viewBox="0 0 174.38893 50.646156"
+   version="1.1"
+   id="svg13519"
+   inkscape:version="0.92.4 (unknown)"
+   sodipodi:docname="ml.svg">
+  <defs
+     id="defs13513">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker14368"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path14366"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path819"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path822"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="243.14398"
+     inkscape:cy="-49.542562"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1" />
+  <metadata
+     id="metadata13516">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-11.159532,-24.321659)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93888855px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="85.526253"
+       y="34.541321"
+       id="text14066"><tspan
+         sodipodi:role="line"
+         id="tspan14064"
+         x="85.526253"
+         y="34.541321"
+         style="stroke-width:0.26458332">Strojno učenje</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93888855px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="16.303436"
+       y="67.682747"
+       id="text14070"><tspan
+         sodipodi:role="line"
+         id="tspan14068"
+         x="16.303436"
+         y="67.682747"
+         style="stroke-width:0.26458332">Nadzirano učenje</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93888855px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="75.904549"
+       y="67.949997"
+       id="text14074"><tspan
+         sodipodi:role="line"
+         id="tspan14072"
+         x="75.904549"
+         y="67.949997"
+         style="stroke-width:0.26458332">Nenadzirano učenje</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.93888855px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="138.71289"
+       y="68.217278"
+       id="text14078"><tspan
+         sodipodi:role="line"
+         id="tspan14076"
+         x="138.71289"
+         y="68.217278"
+         style="stroke-width:0.26458332">Podržano učenje</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect14080"
+       width="55.859333"
+       height="14.699824"
+       x="76.171814"
+       y="25.454159" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.26973185;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect14082"
+       width="52.117558"
+       height="15.229471"
+       x="12.294398"
+       y="58.595097" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect14084"
+       width="58.264755"
+       height="15.234363"
+       x="70.02462"
+       y="58.595577" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect14096"
+       width="49.979401"
+       height="15.234363"
+       x="134.43657"
+       y="58.600952" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
+       d="M 38.754081,58.595579 103.43331,40.153984 v 18.441597"
+       id="path14306"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker14368)"
+       d="m 103.43331,40.153984 55.85933,18.441595"
+       id="path14358"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

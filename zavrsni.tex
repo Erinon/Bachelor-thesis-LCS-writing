@@ -47,41 +47,110 @@ Prilikom implementacije, korištena je ideja Willsonovog XCS sustava temeljenog 
 U poglavlju \ref{ch:podr} dan je kratak pregled područja.
 Poglavlje \ref{ch:prob} daje detaljniji opis gore navedenih problema koji su rješavani u ovom radu.
 Način rada sustava i detaljan opis koriptenih algoritama opisan je u poglavlju \ref{ch:algs}.
-Rezultati dobiveni primjenom razvijenog sustava opširno su prikazani grafovima i komentirani u poglavlju \ref{ch:rec}.
+Rezultati dobiveni primjenom razvijenog sustava opširno su prikazani grafovima i komentirani u poglavlju \ref{ch:res}.
 Rad je zaključen i dan je prijedlog budućeg razvoja u poglavlju \ref{ch:zak}.
 
 \chapter{Pregled područja} \label{ch:podr}
 Sustavi LCS su sustavi temeljeni na pravilima, koji povezuju evolucijsko računarstvo i strojno učenje kako bi se što bolje prilagodili rješavanju danog problema.
-Sustav je u međudjelovanju s nepoznatom okolinom, od koje pomoću osjetila \engl{sensors} dobiva ulaz, a preko djelovatelja \engl{effectors} nad njom izvršava određenu akciju \citep{4}.
+Sustav je u međudjelovanju s nepoznatom okolinom \engl {environment}, od koje pomoću osjetila \engl{sensors} dobiva ulaz, a preko djelovatelja \engl{effectors} nad njom izvršava određenu akciju \citep{4}.
 Sustav se sastoji od skupa određenog broja pravila koja zajedno rješavaju neki problem.
 Bitno je naglasiti da poanta učenja nije pronaći jedno pravilo koje na kraju rješava dani problem, nego razviti cijelu populaciju pravila koja ga međusobno rješavaju.
 Pravila su najčešće u obliku "AKO \emph{uvjet} ONDA \emph{akcija}".
 Uvjet pravila većinom je tvoren od znakova ternarne abecede {0, 1, \#}.
 Znakovi 0 i 1 moraju se podudarati s odgovarajućim znakovima ulaza, dok se znak \# podudara s bilo kojim znakom.
-Znak \# zovemo \emph{don't care simbolom} \engl{don't care symbol}\footnote{U literaturi se još može naći naziv \emph{wildcard}.} i on omogućava generaliziranje.
+Znak \# zovemo simbolom \emph{don't care} \engl{don't care symbol}\footnote{U literaturi se još može naći naziv \emph{wildcard}.} i on omogućava generaliziranje.
 Problemi su najčešće takvi da je prostor pretraživanja jako velik i nije moguće doslovno naučiti svaki primjer, nego je potrebna sposobnost generaliziranja.
-Prilikom istraživanja novih pravila koriste se tehnike evolucijskog računarstva.
+Prilikom istraživanja novih pravila koriste se tehnike evolucijskog računarstva \engl{evolutionary computation}.
 
-Evolucijsko računarsvo bavi se algoritmima pretraživanja temeljenima na prirodnoj selekciji.
-Ideja ovog pristupa je da se od početne proizvoljno generirane populacije jedinki, postupcima prirodne selekcije, križanja i mutacije, postupno generiraju bolje i prilagođenije jedinke.
-Detaljna razrada evolucijskog računarstva ne ulazi u opseg ovog rada, stoga ono ovdje neće biti detaljnije opisano.
-Više informacija čitatelj može pronaći u \citep{6}.
+Položaj \emph{evolucijskog računarstva} unutar \emph{računarstva} prikazan je slikom \ref{img:racpol}.
+\emph{Evolucijsko računarstvo} jedna je od grana \emph{računarstva} iz skupine \emph{mekog računarstva} \engl{soft computing}, zajedno sa \emph{neuro-računarstvom} i \emph{neizrazitim računarstvom}.
+Ono se bavi algoritmima pretraživanja temeljenima na prirodnoj selekciji.
+Cilj je unapređenje početne populacije u kojoj svaka jedinka predstavlja rješenje ili dio rješenja.
+Jedinke se trebaju moći vrednovati s obzirom na rješavani problem kako bismo ih mogli uspoređivati.
+Za unapređenje populacije jedinki koriste se tehnike selekcije, križanja i mutacije.
+Selekcija je postupak odabira roditeljskih jedinki iz populacije.
+Prilikom odabira roditelja, većinom se u obzir uzima njihova dobrota (jedinke koje imaju veću dobrotu, imaju i veću vjerojatnost odabira za roditeljsku jedinku).
+Nakon odabira roditelja, dolazi do njihovog križanja te tako nastaju potomci \engl{offspring}.
+Križanje je kombiniranje genetskog materijala roditelja čime se stvaraju potomci koji dio svog genetskog materijala naslijede od jednog, a dio od drugog roditelja.
+Nakon križanja, javlja se mutacija gena potomaka.
+Svaki gen ima određenu vjerojatnost mutacije.
+Mutacijom gen može promijeniti trenutnu vrijednost u neku novu koja ovisi o trenutnoj ili se može generirati potpuno novi gen.
+Više informacija o evolucijskom računarstvu i genetskim algoritmima čitatelj može pronaći u \citep{6}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{img/racpol.pdf}
+    \caption{Položaj evolucijskog računarstva unutar računarstva.}
+    \label{img:racpol}
+\end{figure}
 
-Prilikom rada LCS sustava, pravila djeluju zajedno, ali neka su \emph{bolja} i imaju veću sposobnost generaliziranja od drugih.
+Prilikom rada sustava LCS, pravila djeluju zajedno, ali neka su \emph{bolja} i imaju veću sposobnost generaliziranja od drugih.
 Kako bi razlikovali različita pravila i u kojoj mjeri ona utječu na konačni ishod sustava, pravilima se dodjeljuju razni parametri.
-Ažuriranje tih parametara obavlja se tehnikama potpornog učenja, koje usmjerava potragu za boljima pravilima \citep{3}.
+Ažuriranje tih parametara obavlja se tehnikama potpornog učenja \engl{reinforcement learning}, koje usmjerava potragu za boljim pravilima \citep{3}.
 
-Potporno učenje je učenje temeljeno na pokušajima, nakon kojih sustav dobije određenu brojčanu nagradu.
-U ovisnosti o nagradi, sustav podešava svoje parametre s ciljem povećavanja buduće nagrade te se na taj način prilagođava problemu kojeg rješava.
-Detaljan opis postupaka potpornog učenja također izlazi iz opsega ovog rada, stoga čitatelj više informacija može pronaći u \citep{7}.
 
-Dva glavna pristupa u implementaciji LCS sustava su \emph{Michigan-Style} LCS i \emph{Pittsburgh-Style} LCS.
-Glavna razlika je u tome što \emph{Pittsburgh-Style} LCS sustav koristi više skupova pravila, od kojih je svaki od tih skupova moguće konačno rješenje, a genetski algoritam djeluje na jednom cijelom skupu pravila. S obzirom da \emph{Pittsburgh-Style} LCS nije tema ovog rada, u nastavku je dan detaljniji opis \emph{Michigan-Style} LCS sustava.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{img/ml.pdf}
+    \caption{Položaj \emph{podržanog učenja} unutar \emph{strojnog učenja}.}
+    \label{img:racpol}
+\end{figure}
+\emph{Podržano učenje} grana je \emph{strojnog učenja} \engl{machine learning} zajedno za \emph{nadziranim} \engl{supervised} i \emph{nenadziranim učenjem} \engl{unsupervised learning}.
+Podržano učenje je na pokušajima, nakon kojih sustav dobije određenu brojčanu nagradu.
+Cilj sustava temeljenog na podržanom učenju je maksimizirati nagradu koju sustav dobije izvršavanjem neke akcije.
+U ovisnosti o dobivenoj nagradi, sustav podešava svoje parametre kako bi s vremenom dobivao sve veću i veću nagradu.
+Značajka podržanog učenja je da se sustav ne uči na poznatim točnim ishodima, nego sustav sam odabire svoju akciju na temelju koje dobiva određenu brojčanu nagradu.
+Na taj način je sustav primoran učiti samo iz svog prethodnog iskustva.
+Detaljniju analizu podržanog učenja čitatelj može pronaći u \citep{7}.
 
-\emph{Michigan-Style} LCS (u nastavku samo LCS) sustav prvi je formalizirao John Holland i u suradnji s Judith Reitman dao njegovu implementaciju.
+Dva glavna pristupa u implementaciji sustava LCS su \emph{michiganski stil} \engl{Michigan-Style} i \emph{pittsburgski stil} \emph{Pittsburgh-Style}.
+\emph{Pittsburgski stil} sustava LCS sadrži skup jedinki od kojih je svaka moguće konačno rješenje sustava.
+Jedna jedinka je cijeli skup pravila, što znači da je karakteristika \emph{pittsburgskog stil} da sadrži više neovisnih skupova pravila.
+Iako pravila moraju biti jednake duljine, svaki skup pravila može sadržavati različit broj pravila.
+Genetski algoritam pokreće se nad cijelim skupom jedinki, odnosno na skupom skupova pravila.
+
+U okviru ovog rada obrađen je \emph{michiganski stil} sustava LCS.
+\emph{michiganski stil} sustava LCS
+\emph{michiganski stil} sustava LCS prvi je formalizirao John Holland i u suradnji s Judith Reitman dao njegovu implementaciju.
 S obzirom na složenost originalnog LCS sustava, malo jednostavniju i razumljiviju inačicu dao je Stewart W. Wilson pod nazivom ZCS (\emph{"zeroth-level" classifier system}).
 Nakon toga, Wilson je uveo još jednu inačicu LCS sustava pod nazivom XCS, u kojemu je promijenio način na koji se računa $dobrota$ pojedinih pravila.
 U sklopu ovog rada obrađen je sustav XCS, koji je detaljno objašnjen u poglavljima koja slijede, a za detaljniji opis LCS i ZCS sustava čitatelj se upućuje na \citep{3}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/xcs.pdf}
+    \caption{Ilustracija sustava XCS.}
+    \label{img:xcs}
+\end{figure}
+Ilustracija međudjelovanja komponenti sustava XCS prikazana je na slici \ref{img:xcs}.
+Prilikom rada sustava izmjenjuju se načini rada \emph{istraži} \engl{explore} i \emph{iskoristi} \engl{exploit}.
+U načinu rada \emph{istraži}, sustav se prilagođava zadanom problemu mijenjanjem svoje konfiguracije, a u načinu rada \emph{iskoristi} sustav se ne mijenja, nego se na temelju trenutne konfiguracije predviđa akcija koju treba izvršiti.
+
+Prilikom načina rada \emph{istraži} sustav najprije od nepoznate okoline preko osjetila dobije ulazni podatak.
+Po primitku podatka, skeniraju se sva pravila unutar populacije pravila [\emph{P}].
+Od svih pravila iz [\emph{P}], od onih koja odgovaraju dobivenom ulaznom podatku tvori se podudarni skup \engl{match set} [\emph{M}].
+Nakon formiranja podudarnog skupa [\emph{M}], u slučaju da on ne sadrži barem jedno pravilo za svaku moguću akciju, pokreće se operacija pokrivanja \engl{covering operation}.
+Operacija pokrivanja generira proizvoljno pravilo koje odgovara zadanom ulazu i traženoj akciji te ga dodaje u populaciju.
+Nakon što je formiran konačni podudarni skup, tvori se polje predviđanja \engl {prediction array}.
+Polje predviđanja za svaku moguću akciju sadrži podatak o tome kolika se prosječna nagrada očekuje izvršavanjem te akcije.
+Na temelju polja predviđanja izabire se konačna akcija koju će sustav izvršiti za dani ulazni podatak.
+Odabirom konačne akcije, skenira se podudarni skup i tvori se akcijski skup \engl {action set} [\emph{A}].
+Akcijski skup sastoji se od svih pravila sadržanih u podudarnom skupu koja zagovaraju odabranu konačnu akciju.
+Po formiranju akcijskog skupa, nad okolinom se, preko djelovatelja, izvršava odabrana akcija.
+Nakon toga, okolina u ovisnosti o izvršenoj akciji sustavu dodjeljuje određenu numeričku nagradu \engl {reward}.
+Što je sustav izvršio bolju akciju u ovisnosti o ulaznom podatku, to je nagrada veća i obrnuto.
+Cilj sustava je maksimizirati nagradu koju dobije od okoline.
+Na temelju dobivene nagrade, sustav ažurira određene parametre svih pravila unutar akcijskog skupa, u svrhu povećanja buduće nagrade.
+Nakon ažuriranja parametara, ako je zadovoljen određeni uvjet, uključuje se istraživačka komponenta koja primjenom genetskih algoritama istražuje nova pravila.
+Operacija istraživanja novih parametara djeluje isključivo nad akcijskim skupom.
+
+Prilikom načina rada \emph{iskoristi} isključuju se sve istraživačke komponente.
+Sustav preko osjetila od okoline dobije ulazni podatak.
+Po primitku podatka tvori se podudarni skup sa svim pravilima iz populacije koja odgovaraju dobivenom ulaznom podatku.
+Nakon toga, tvori se polje predviđanja, kao i u načinu rada \emph{istraži}.
+Sada se na temelju polja predviđanja izabire ona akcija čijim izvršavanjem se očekuje najveća nagrada okoline.
+Trenutna iteracija ovdje završava te se čeka sljedeći podatak na ulazu.
+
+Ovaj cijeli postupak detaljno je opisan u poglavlju \ref{ch:algs} gdje su točno opisani i korišteni pripadni algoritmi.
 
 \chapter{Opis problema} \label{ch:prob}
 Problemi testirani u ovom radu su:
@@ -105,8 +174,19 @@ Upravljački bitovi određuju točno jedan ulazni bit koji se dalje prosljeđuje
 Općenito, multipleksor koji ima $k$ upravljačkih bitova funkcionira na isti način.
 $k$ upravljačkih bitova može adresirati $2^{k}$ ulaznih bitova, stoga je multipleksor s $k$ upravljačkih bitova funkcija od $k + 2^{k}$ varijabli.
 Izlaz iz multipleksora je uvijek točno 1 bit, koji ima vrijednost 0 ili 1.
-Primjer 4/1 multipleksora prikazanog nizom od 6 bitova je 011010.
-U ovom primjeru prva dva bita, 01, označavaju da je izlaz iz multipleksora drugi od preostalih bitova, odnosno 0.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=5cm]{img/muxex.pdf}
+    \caption{Konkretan primjer 4/1 multipleksora.}
+    \label{img:muxex}
+\end{figure}
+Na slici \ref{img:muxex} dan je konkretan primjer 4/1 multipleksora.
+Upravljači bitovi ovdje su 01, a ulazni 1010.
+Upravljački bitovi adresiraju drugi ulaz u multipleksor, stoga se on propušta na izlaz.
+Na izlazu vidimo vrijednost 0, koja odgovara drugom ulazu.
+U implementaciji, ovaj primjer bi na ulaz bio dan kao niz bitova 011010.
+Ulaz se prvo sastoji od upravljačih bitova, a zatim ulaznih.
+Očekivani izlaz bi u ovom slučaju bio 0.
 \begin{table}[!htb]
     \caption{Opis rada multipleksora 4/1.}
     \label{tbl:mux}
@@ -121,19 +201,54 @@ U ovom primjeru prva dva bita, 01, označavaju da je izlaz iz multipleksora drug
 \end{table}
 
 Problem paritetnog bita svodi se na ispitivanje broja pojavljivanja bita 1 unutar ulaza.
-Ako je broj pojavljivanja bita 1 paran, izlaz treba biti 1, a u suprotnom 0.
-Primjer 6-bitnog ulaza je 011010, gdje je broj pojavljivanja bita 1 3, stoga izlaz treba biti 0.
+Sklop za određivanje paritetnog bita za parni paritet na ulaz prima $n$-bitni binarni broj te vraća broj s ulaza proširen jednim dodatnim bitom, koji osigurava da je broj pojavljivanja bita 1 paran, odnosno osigurava parni paritet.
+Dodani bit naziva se paritetni bit.
+Ako je broj pojavljivanja bita 1 paran, broj se treba proširiti bitom 0, a u suprotnom bitom 1.
+Primjer jednog takvog sklopa koji radi za 6-bitne binarne brojeve prikazan je na slici \ref{img:parex}. Prikazani sklop na ulaz prima 6-bitni binarni broj 011010.
+Ulazni podatak ima neparan broj (3) jedinica, dakle treba ga proširiti bitom 1.
+Sklop na izlazu vraća 7-bitni binarni broj \textbf{1}011010 koji ima paran broj (4) jedinica.
+Prilikom rješavanja ovog problema, razvijeni sustav određuje samo prikazani paritetni bit za parni paritet, a ne cijeli novi $n + 1$-bitni broj.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=5cm]{img/parity.pdf}
+    \caption{Primjer sklopa za određivanje paritetnog bita na 6-bitnom binarnom broju.}
+    \label{img:parex}
+\end{figure}
 
 Prilikom problema najzastupljenijeg bita, ispituje se frekvencija pojavljivanja pojedinih bitova.
-Izlaz je onaj bit koji se pojavljuje više puta.
-Na primjer, ako je 5-bitni ulaz 01101, bit 1 se pojavljuje 3 puta, a bit 0 2 puta, stoga izlaz treba biti 1.
-Ulaz za ovaj problem će uvijek biti neparne duljine, da izbjegnemo situaciju u kojoj se svaki bit pojavljuje jednak broj puta.
+Sklop za određivanje najzastupljenijeg bita na ulaz prima $n$-bitni binarni broj i na izlaz vraća samo jedan bit, bit koji se najviše puta pojavio u ulaznom binarnom broju.
+Primjer jednog takvog sklopa koji na ulaz prima 7-bitni binarni broj prikazan je na slici \ref{img:majex}.
+Ulaz u sklop je binarni broj 1011010.
+Ulazni broj ima 4 bita i 3 bita 0.
+S obzirom da je broj pojavljivanja bita 1 veći od broja pojavljivanja bita 0, na izlaz se vraća bit 1.
+Prilikom rješavanja problema najzastupljenijeg bita, ulazni brojevi uvijek su neparne duljine, kako bi se izbjeglo pojavljivanje jednakog broja bitova 0 i bitova 1.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=5cm]{img/majority.pdf}
+    \caption{Primjer sklopa za određivanje najzastupljenijeg bita na 7-bitnom binarnom broju.}
+    \label{img:majex}
+\end{figure}
 
-U posljednjem problemu, izlaz mora biti bit prijenosa prilikom zbrajanja dva binarna broja jednake duljine.
-Osigurano je da je ulaz uvijek parne duljine, kako bi mogao biti podijeljen na dva binarna broja.
-Ako ulaz ima $n$ bitova, prvih $n / 2$ bitova odgovara prvom broju, a posljednjih $n / 2$ bitova drugom broju.
-Primjer ulaza za računanje prijenosa prilikom zbrajanja dva 3-bitna binarna broja je 011110, gdje je prvi broj 011, a drugi 110.
-Izlaz je ovdje 1, jer je nakon zbrajanja prijenos 1.
+Na slici \ref{img:caex} dan je primjer rada 7-bitnog binarnog zbrajala.
+Višebitno binarno zbrajalo na ulaze prima bitove oba pribrojnika.
+Bitovi pribrojnika šalju se u grupama prema težini.
+Iz slike je vidljivo da se 3-bitno binarno zbrajalo sastoji od 3 komponente.
+Općenito, $n$-bitno binarno zbrajalo sastoji se od $n$ komponenti.
+Komponenta označena slovom $H$ je poluzbrajalo \engl{half-adder}.
+Poluzbrajalo na ulaze prima dva bita, na jedan izlaz vraća njihov zbroj (označen strelicom prema dolje), a na drugi izlaz vraća bit prijenosa (označen strelicom prema lijevo).
+Komponente označene slovima $FA$ su potpuna zbrajala \engl{full-adder}.
+Potpuno zbrajalo na ulaze prima 3 bita, a kao i poluzbrajalo, na izlaze vraća zbroj tih bitova i bit prijenosa.
+U prikazanom primjeru, prvi binarni broj je 110, a drugi binarni broj 011.
+Rezultat zbrajanja je binarni broj 001, a konačni bit prijenosa, koji predstavlja izlaz iz 3-bitnog zbrajala je 1.
+U implementaciji je ulaz u $n$-bitno binarno zbrajalo prikazan redom bitovima prvog pa drugog pribrojnika i on je veličine $2n$, a izlaz je konačni bit prijenosa.
+Testirajući ovaj primjer, podatak dobiven iz okoline bio bi 110011, a očekivani izlaz bio bi 1.
+Ulazni podatak uvijek će biti parne duljine $2n$, kako bi se on mogao interpretirati kao 2 $n$-bitna binarna broja.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=13cm]{img/fa.pdf}
+    \caption{Primjer višebitnog binarnog zbrajala za zbrajanje 3-bitnih binarnih brojeva.}
+    \label{img:caex}
+\end{figure}
 
 \chapter{Opis algoritama} \label{ch:algs}
 U sklopu razrade ovog sustava, potrebno je ostvariti iskorištavanje znanja već naučenog na jednostavnijim problemima.
