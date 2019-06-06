@@ -67,7 +67,7 @@ Položaj \emph{evolucijskog računarstva} unutar \emph{računarstva} prikazan je
 Ono se bavi algoritmima pretraživanja temeljenima na prirodnoj selekciji.
 Cilj je unapređenje početne populacije u kojoj svaka jedinka predstavlja rješenje ili dio rješenja.
 Jedinke se trebaju moći vrednovati s obzirom na rješavani problem kako bismo ih mogli uspoređivati.
-Za unapređenje populacije jedinki koriste se tehnike selekcije, križanja i mutacije.
+Za unapređenje populacije jedinki koriste se tehnike selekcije \engl{selection}, križanja \engl{crossover} i mutacije \engl{mutation}.
 Selekcija je postupak odabira roditeljskih jedinki iz populacije.
 Prilikom odabira roditelja, većinom se u obzir uzima njihova dobrota (jedinke koje imaju veću dobrotu, imaju i veću vjerojatnost odabira za roditeljsku jedinku).
 Nakon odabira roditelja, dolazi do njihovog križanja te tako nastaju potomci \engl{offspring}.
@@ -296,20 +296,20 @@ U načinu rada \emph{istraži}, na početku se od okoline dobije ulazni podatak 
 U ovisnosti o $s$, formira se \emph{podudarni skup} [\emph{M}].
 [\emph{M}] se sastoji od svih pravila iz populacije [\emph{P}] koji odgovaraju ulazu $s$.
 
-Za pravilo $cl$\footnote{Kratica dolazi od engl. \emph{classifier}. Naime, u ovom je slučaju cijeli sustav jedan klasifikator koji raspoređuje podatke u razrede, ali i za svako pravilo se može reći da je jedan mali klasifikator. S obzirom da samo pravilo pojedinačno ne radi ispravnu klasifikaciju, ovdje ga ispravine zovemo \emph{pravilo}, a ne \emph{klasifikator}.} kažemo da odgovara ulazu $s$, ako svaki programski isječak za zadani ulaz $s$ na izlazu daje 1.
+Za pravilo $cl$\footnote{Kratica dolazi od engl. \emph{classifier}. Naime, u ovom je slučaju cijeli sustav jedan klasifikator koji raspoređuje podatke u razrede, ali i za svako pravilo se može reći da je jedan \emph{mali} klasifikator. S obzirom da samo pravilo pojedinačno ne radi ispravnu klasifikaciju, ovdje ga ispravine zovemo \emph{pravilo}, a ne \emph{klasifikator}.} kažemo da odgovara ulazu $s$, ako svaki programski isječak za zadani ulaz $s$ na izlazu daje 1.
 S obzirom da svaki programski isječak unutar uvjeta pravila na ulaz dobiva cijeli $s$, poredak programskih isječaka unutar pravila uopće nije bitan.
-Algoritam \ref{match} prikazuje postupak evalucaije pravila $cl$ u odnosu na ulaz $s$.
-Pri tome $cf$ označava \emph{i}-ti programski isječak unutar zadanog pravila $cl$, a \emph{val} rezultat programskog isječka $cf$ s obzirom na zadani ulaz $s$.
-\emph{n} je duljina uvjeta unutar pravila, odnosno broj programskih isječaka koji se nalaze u klasifikatoru.
-\emph{cl.cond} je polje svih programskih isječaka.
-Algoritam vraća vrijednost \emph{true} ako svaki programski isječak za zadani ulaz \emph{s} vraća vrijednost 1, a \emph{false} inače.
+Algoritam \ref{match} prikazuje postupak evaluacije pravila $cl$ u odnosu na ulaz $s$.
+Pri tome $cf$ označava \emph{i}-ti programski isječak unutar zadanog pravila $cl$, a $val$ rezultat programskog isječka $cf$ s obzirom na zadani ulaz $s$.
+$n$ je duljina uvjeta unutar pravila, odnosno broj programskih isječaka koji se nalaze u pravilu.
+$cl.cond$ je polje svih programskih isječaka.
+Algoritam vraća vrijednost $true$ ako svaki programski isječak za zadani ulaz $s$ vraća vrijednost 1, a $false$ inače.
 
 \begin{algorithm}
-    \caption{Evaluiranje klasifikatora $cl$ u odnosu na ulaz $s$}
+    \caption{Evaluiranje pravila $cl$ u odnosu na ulaz $s$}
     \label{match}
     \begin{algorithmic}
-        \STATE{\textbf{Ulaz:} $cl$ -- klasifikator, $s$ -- stanje okoline.}
-        \STATE{\textbf{Izlaz:} odgovara li klasifikator $cl$ stanju $s$}
+        \STATE{\textbf{Ulaz:} $cl$ -- pravilo, $s$ -- stanje okoline.}
+        \STATE{\textbf{Izlaz:} odgovara li pravilo $cl$ stanju $s$}
         \FOR{($i := 0; i < n; i := i + 1$)}
         \STATE{$cf := cl.cond[i]$}
         \STATE{$val := evaluiraj(cf, s)$}
@@ -339,11 +339,11 @@ Pokazano je da se sva tri programska isječka za ovaj ulaz evaluiraju u 1, stoga
     \label{img:clex}
 \end{figure}
 
-Nakon formiranja [\emph{M}], provjerava se sadrži li [\emph{M}] sve moguće akcije \emph{a}.
-U slučaju da za neku akciju ne postoji pripadni klasifikator, pokreće se operacija pokrivanja \engl{Covering Operation}, prikazana algoritmom \ref{cover}.
-U operaciji pokrivanja stvara se novi klasifikator čiji je svaki programski isječak \emph{don't care} simbol s vjerojatnošću $P_{don'tCare}$, a s vjerojatnošću $1 - P_{don'tCare}$ proizvoljno generirani programski isječak, koji s obzirom na stanje $s$ mora vraćati 1.
+Nakon formiranja [\emph{M}], provjerava se sadrži li [\emph{M}] sve moguće akcije $a$.
+U slučaju da za neku akciju ne postoji pripadno pravilo, pokreće se operacija pokrivanja \engl{covering operation}, prikazana algoritmom \ref{cover}.
+U operaciji pokrivanja stvara se novo pravilo čiji je svaki programski isječak simbol \emph{don't care} s vjerojatnošću $P_{don'tCare}$, a s vjerojatnošću $1 - P_{don'tCare}$ proizvoljno generirani programski isječak, koji s obzirom na stanje $s$ mora vraćati 1.
 U prikazanom algoritmu, $cl.action$ sadrži akciju koju zagovara pravilo $cl$.
-Operacija pokrivanja pokreće se za svaku akciju koja nedostaje u [\emph{M}], a novi klasifikator se dodaje u [\emph{P}] i [\emph{M}].
+Operacija pokrivanja pokreće se za svaku akciju koja nedostaje u [\emph{M}], a novo pravilo se dodaje u [\emph{P}] i [\emph{M}].
 
 \begin{algorithm}
     \caption{Operacija pokrivanja}
@@ -370,9 +370,9 @@ Operacija pokrivanja pokreće se za svaku akciju koja nedostaje u [\emph{M}], a 
 \end{algorithm}
 
 Nakon svakog novog dodavanja pravila u [\emph{P}], pokreće se operacija brisanja \citep{1}.
-S obzirom da je potrebno zadržati maksimalnu veličinu populacije $N$, ako je trenutna veličina populacije veća od $N$, izabiru se klasifikatori koje je potrebno izbrisati.
+S obzirom da je potrebno zadržati maksimalnu veličinu populacije $N$, ako je trenutna veličina populacije veća od $N$, izabiru se pravila koja je potrebno izbrisati.
 Operacija brisanja prikazana je algoritmom \ref{del}.
-Klasifikator se za brisanje odabire \emph{Roulette-Wheel} postupkom, na temelju glasova koje dale svaki klasifikator.
+Pravilo se za brisanje odabire \emph{Roulette-Wheel} postupkom, na temelju glasova koje daje svako pravilo.
 \begin{algorithm}
     \caption{Operacija brisanja}
     \label{del}
@@ -385,19 +385,19 @@ Klasifikator se za brisanje odabire \emph{Roulette-Wheel} postupkom, na temelju 
         \ENDIF
         \STATE{$prosjecnaDobrota := (\sum_{cl \in [P]} cl.F \cdot cl.n) / velicinaPopulacije$}
         \STATE{$sumaGlasova := 0$}
-        \FOR{(klasifikator $cl$ iz $[P]$)}
+        \FOR{(pravilo $cl$ iz $[P]$)}
         \STATE{$sumaGlasova := sumaGlasova + glas(cl, prosjecnaDobrota)$}
         \ENDFOR
         \STATE{$r$ := proizvoljan decimalni broj iz intervala [0, 1)}
         \STATE{$odabir := r \cdot sumaGlasova$}
         \STATE{$sumaGlasova := 0$}
-        \FOR{(klasifikator $cl$ iz $[P]$)}
+        \FOR{(pravilo $cl$ iz $[P]$)}
         \STATE{$sumaGlasova := sumaGlasova + glas(cl, prosjecnaDobrota)$}
         \IF{$odabir < sumaGlasova$}
         \IF{$cl.n > 1$}
         \STATE{$cl.n := cl.n - 1$}
         \ELSE
-        \STATE{izbaci klasifikator $cl$ iz populacije $[P]$}
+        \STATE{izbaci pravilo $cl$ iz populacije $[P]$}
         \ENDIF
         \RETURN
         \ENDIF
@@ -405,24 +405,24 @@ Klasifikator se za brisanje odabire \emph{Roulette-Wheel} postupkom, na temelju 
     \end{algorithmic}
 \end{algorithm}
 Postupak izračuna glasova prikazan je algoritmom \ref{vote}.
-Glas svakog klasifikatora temelji se na prosječnoj veličini akcijskog skupa.
+Glas svakog pravila temelji se na prosječnoj veličini akcijskog skupa u kojemu se ono nalazilo.
 Razlog tomu je pokušaj ostvarenja približno jednakih veličina akcijskih skupova.
-Također, ako je klasifikator dovoljno iskusan, a dobrota klasifikatora je znatno manja od prosječne dobrote unutar populacije, vjerojatnost njegovog izbacivanja se dodatno povećava u ovisnosti o njegovoj dobroti.
-Time je osigurano izbacivanje lošijih klasifikatora.
-Iskustvo klasifikatora $cl$ određeno je brojem pojavljivanja tog klasifikatora unutar akcijskog skupa i pamti se u varijabli $cl.exp$.
-Konstanta $\theta_{del}$ određuje granicu iskustva nakon koje se može reći da je klasifikator dovoljno iskusan za brisanje.
-Konstanta $\delta$ ($0 < \delta \leq 1$) određuje minimalni postotak prosječne dobrote populacije koju klasifikator mora imati da se njegov glas ne bi dodatno povećao.
-Vjerojatnost odabira svakog klasifikatora prilikom \emph{Roulette-Wheel} postupka jednaka je postotku glasa tog klasifikatora u odnosu na ukupnu sumu glasova.
-Ako je brojnost klasifikatora veća od 1, ona se samo umanjuje za 1.
-Nakon što je klasifikator $cl$ izabran za brisanje, provjerava se njegova brojnost sadržana u $cl.n$.
-U suprotnom, klasifikator se izbacuje iz populacije.
+Također, ako je pravilo dovoljno iskusno, a dobrota pravila je znatno manja od prosječne dobrote unutar populacije, vjerojatnost njegovog izbacivanja se dodatno povećava.
+Time je osigurano izbacivanje lošijih pravila.
+Iskustvo pravila $cl$ određeno je brojem pojavljivanja tog pravila unutar akcijskog skupa i pamti se u varijabli $cl.exp$.
+Konstanta $\theta_{del}$ određuje granicu iskustva nakon koje se može reći da je pravilo dovoljno iskusno za brisanje.
+Konstanta $\delta$ ($0 < \delta \leq 1$) određuje minimalni postotak prosječne dobrote populacije koju pravilo mora imati da se njegov glas ne bi dodatno povećao.
+Vjerojatnost odabira svakog pravila prilikom \emph{Roulette-Wheel} postupka jednaka je postotku glasa tog pravila u odnosu na ukupnu sumu glasova.
+Nakon što je pravilo $cl$ izabrano za brisanje, provjerava se njegova brojnost sadržana u $cl.n$.
+Ako je njegova brojnost veća od 1, brojnost se umanjuje za 1 i pravilo se ne izbaciju iz populacije.
+U suprotnom, ako je brojnost 1, pravilo se izbacuje iz populacije.
 
 \begin{algorithm}
     \caption{Glas}
     \label{vote}
     \begin{algorithmic}
-        \STATE{\textbf{Ulaz:} $cl$ -- klasifikator čiji glas računamo, $prosjecnaDobrota$ -- prosječna dobrota populacije.}
-        \STATE{\textbf{Izlaz:} $glas$ -- glas klasifikatora $cl$}
+        \STATE{\textbf{Ulaz:} $cl$ -- pravilo čiji glas računamo, $prosjecnaDobrota$ -- prosječna dobrota populacije.}
+        \STATE{\textbf{Izlaz:} $glas$ -- glas pravila $cl$}
         \STATE{$vote := cl.as \cdot cl.n$}
         \IF{$cl.exp > \theta_{del}$ and $cl.F / cl.n < \delta \cdot prosjecnaDobrota$}
         \STATE{$vote := vote \cdot prosjecnaDobrota / (cl.F / cl.n)$}
@@ -432,43 +432,42 @@ U suprotnom, klasifikator se izbacuje iz populacije.
 \end{algorithm}
 
 Nakon formiranja podudarnog skupa [\emph{M}], potrebno je odrediti akciju koju će sustav izvršiti.
-Akcija se određuje na temelju klasifikatora sadržanih u [\emph{M}].
+Akcija se određuje na temelju pravila sadržanih u [\emph{M}].
 Za svaku akciju, potrebno je izračunati srednju vrijednost nagrade koju sustav očekuje izvršavanjem te akcije.
 Ona se označava funkcijom $P(a)$ i računa po formuli \eqref{eq:pred}.
 \begin{equation}
     \label{eq:pred}
     P(a) = \frac{\sum_{cl \in [M] \land cl.a = a} cl.p \cdot cl.F \cdot cl.n}{\sum_{cl \in [M] \land cl.a = a} cl.F \cdot cl.n}
 \end{equation}
-Vrijednosti $P(a)$ za svaku moguću akciju tvore \emph{polje predviđanja} \engl{prediction array}.
-Ovisno o vrijednostima $P(a)$, \emph{Roulette-Wheel} postupkom se izabire konačna akcija koju sustav izvršava\footnote{
-Akcija može biti izabrana i nekim drugim postupkom, npr. proizvoljno (\emph{pure exploration}) ili se može odabrati akcija s najvećom $P(a)$ vrijednosti (\emph{pure exploitation}).
+Vrijednosti $P(a)$ za svaku moguću akciju tvore \emph{polje predviđanja}.
+Ovisno o vrijednostima $P(a)$, \emph{Roulette-Wheel} postupkom se izabire konačna akcija koju sustav izvršava\footnote{Akcija može biti izabrana i nekim drugim postupkom, npr. proizvoljno \engl{pure exploration} ili se može odabrati akcija s najvećom $P(a)$ vrijednosti \engl{pure exploitation}.
 Također, može se koristiti proizvoljna akcija s određenom vjerojatnošću, a u suprotnom najbolja.
-Takav postupak odgovarao bi \emph{$\epsilon$-greedy} postupku odabira u potpornom učenju, gdje bi $\epsilon$ vrijednost odgovarala vjerojatnosti odabira proizvoljne akcije, kako je navedeno u \citep{1}.}.
+Takav postupak odgovarao bi \emph{$\epsilon$-pohlepnom} \engl{$\epsilon$-greedy} postupku odabira u podržanom učenju, gdje bi $\epsilon$ vrijednost odgovarala vjerojatnosti odabira proizvoljne akcije, kako je navedeno u \citep{1}.}.
 Vjerojatnost da će akcija $a$ biti izabrana proporcionalna je vrijednosti $P(a)$.
 
-Nakon odabira akcije $a$, formira se akcijski skup \engl{Action set} [\emph{A}].
-[\emph{A}] se sastoji od svih klasifikatora iz [\emph{M}] koja zagovaraju $a$.
+Nakon odabira akcije $a$, formira se akcijski skup [\emph{A}].
+[\emph{A}] se sastoji od svih pravila iz [\emph{M}] koja zagovaraju $a$.
 Nakon formiranja akcijskog seta izvršava se odabrana akcija $a$ i u ovisnosti o izvršenoj akciji od okoline stiže nagrada $R$.
 
-Po dobitku nagrade, dolazi do ažuriranja parametara svih klasifikatora sadržanih u [\emph{A}].
-Redom se ažuriraju iskustvo klasifikatora \engl{Experience} $exp$, njegovo predviđanje \engl{Prediction} $p$, pogreška u predviđanju \engl{Prediction error} $\epsilon$, preciznost \engl{Accuracy} $\kappa$, relativna preciznost \engl{Relative accuracy} $\kappa'$, dobrota $F$ i prosječna veličina akcijskih skupova koji su sadržavali taj klasifikator \engl{Action set size} $as$.
-Iskustvo klasifikatora $cl$, $cl.exp$, je broj pojavljivanja $cl$ u akcijskom skupu i ažurira se po formuli \eqref{eq:exp}.
+Po dobitku nagrade, dolazi do ažuriranja parametara svih pravila sadržanih u [\emph{A}].
+Redom se ažuriraju iskustvo pravila \engl{experience} $exp$, njegovo predviđanje \engl{prediction} $p$, pogreška u predviđanju \engl{rediction error} $\epsilon$, preciznost \engl{accuracy} $\kappa$, relativna preciznost \engl{relative accuracy} $\kappa'$, dobrota $F$ i prosječna veličina akcijskih skupova koji su sadržavali to pravilo \engl{action set size} $as$.
+Iskustvo pravila $cl$, $cl.exp$, je broj pojavljivanja $cl$ u akcijskom skupu i ažurira se po formuli \eqref{eq:exp}.
 \begin{equation}
     \label{eq:exp}
     cl.exp := cl.exp + 1
 \end{equation}
-Predviđanje klasifikatora, $cl.p$ procjenjuje nagradu koju sustav očekuje podudaranjem klasifikatora i izvođenjem akcije koju ono zagovara.
+Predviđanje pravila, $cl.p$ procjenjuje nagradu koju sustav očekuje podudaranjem pravila i izvođenjem akcije koju ono zagovara.
 Ažurira se po uzoru na Q-učenje, u ovisnosti o dobivenoj nagradi $R$, po formuli \eqref{eq:p}, gdje je $\beta$ realan broj iz intervala $(0, 1]$ i naziva se stopa učenja \engl{learning rate}.
 \begin{equation}
     \label{eq:p}
     cl.p := cl.p + \beta \cdot (R - cl.p)
 \end{equation}
-Pogreška u predviđanju ažurira se u ovisnosti o nagradi $R$ i predviđanju klasifikatora $p$ po formuli \eqref{eq:err}.
+Pogreška u predviđanju ažurira se u ovisnosti o nagradi $R$ i predviđanju pravila $p$ po formuli \eqref{eq:err}.
 \begin{equation}
     \label{eq:err}
     cl.\epsilon := cl.\epsilon + \beta \cdot (|R - cl.p| - cl.\epsilon)
 \end{equation}
-Prije ažuriranja dobrote $F$ klasifikatora, najprije je potrebno izračunati njegovu preciznost $\kappa$, te ju zatim normalizirati s obzirom na preciznosti ostalih klasifikatora unutar akcijskog skupa, odnosno izračunati relativnu preciznost $\kappa'$.
+Prije ažuriranja dobrote $F$ pravila, najprije je potrebno izračunati njegovu preciznost $\kappa$, te ju zatim normalizirati s obzirom na preciznosti ostalih pravila unutar akcijskog skupa, odnosno izračunati relativnu preciznost $\kappa'$.
 \begin{equation}
     \label{eq:acc}
     cl.\kappa :=
@@ -482,15 +481,15 @@ Prije ažuriranja dobrote $F$ klasifikatora, najprije je potrebno izračunati nj
     cl.\kappa' := \frac{\kappa}{\sum_{c \in [A]} c.\kappa}
 \end{equation}
 Pri tome, parametri $\alpha$ $(0 < \alpha < 1)$ i $\nu$ $(\nu > 0)$ kontroliraju brzinu propadanja preciznosti \citep{5}.
-Parametar $\epsilon_{0}$ određuje granicu do koje najviše može doći pogreška u predviđanju $\epsilon$, a da bi se za klasifikator moglo reći da je potpuno precizan.
-Ako za klasifikator $cl$ vrijedi da je $cl.\epsilon < \epsilon_{0}$, njegova preciznost postaje 1 ($cl.\kappa = 1$), a u suprotnom preciznost ekponencijalno opada ovisno o parametrima $\alpha$ i $\nu$, što je prikazano formulom \eqref{eq:acc}.
-Nakon što su izračunate preciznosti svih klasifikatora unutar akcijskog seta [\emph{A}], svaka preciznost se normira ukupnom sumom preciznosti, kao što je prikazano formulom \eqref{eq:racc}.
+Parametar $\epsilon_{0}$ određuje granicu do koje najviše može doći pogreška u predviđanju $\epsilon$, a da bi se za pravilo moglo reći da je potpuno precizno.
+Ako za pravilo $cl$ vrijedi da je $cl.\epsilon < \epsilon_{0}$, njegova preciznost postaje 1 ($cl.\kappa = 1$), a u suprotnom preciznost ekponencijalno opada ovisno o parametrima $\alpha$ i $\nu$, što je prikazano formulom \eqref{eq:acc}.
+Nakon što su izračunate preciznosti svih pravila unutar akcijskog seta [\emph{A}], svaka preciznost se normira ukupnom sumom preciznosti, kao što je prikazano formulom \eqref{eq:racc}.
 Kada je izračunata relativna preciznost, dobrota se ažurira prema formuli \eqref{eq:fit}.
 \begin{equation}
     \label{eq:fit}
     cl.F := cl.F + \beta \cdot (\kappa' - cl.F)
 \end{equation}
-Dobrota klasifikatora je procjena njegove preciznosti s obzirom na ostale klasifikatore iz [\emph{A}].
+Dobrota pravila je procjena njegove preciznosti s obzirom na ostala pravila iz [\emph{A}].
 \begin{figure}[h]
     \centering
     \includegraphics[height=6cm]{img/fit.pdf}
@@ -498,25 +497,25 @@ Dobrota klasifikatora je procjena njegove preciznosti s obzirom na ostale klasif
     \label{img:fit}
 \end{figure}
 Na slici \ref{img:fit} vidi se utjecaj pojedinih parametara prilikom računanja preciznosti $\kappa$.
-Parametar $\epsilon_{0}$ određuje do koje granice će klasifikatori imati jednaku, maksimalnu, preciznost, parametar $\alpha$ uvodi značajnu razliku između preciznih i manje preciznih klasifikatora, a parametri $\nu$ i ponovno $\epsilon_{0}$ određuju brzinu opadanja preciznosti.
+Parametar $\epsilon_{0}$ određuje do koje granice će pravila imati jednaku, maksimalnu, preciznost, parametar $\alpha$ uvodi značajnu razliku između preciznih i manje preciznih pravila, a parametri $\nu$ i ponovno $\epsilon_{0}$ određuju brzinu opadanja preciznosti.
 
-Nakon postavljanja parametara, postoji mogućnost za pokretanjem operacije istraživanja novih klasifikatora \engl{Discovery component}.
-Svaki klasifikator dodatno sadrži i parametar koji pamti kada je zadnji put klasifikator sudjelovao u akcijskom setu nad kojim se provela operacija istraživanja novih pravila.
-Operacija otkrivanja novih pravila provodi se ukoliko je prosječno vrijeme proteklo od prošlog pokretanja operacije otkrivanja na klasifikatorima unutar akcijskog seta veće od vremena određenog konstantom $\theta_{GA}$.
+Nakon postavljanja parametara, postoji mogućnost za pokretanjem operacije istraživanja novih pravila \engl{discovery component}.
+Svako pravilo dodatno sadrži i parametar koji pamti kada je zadnji put ono sudjelovao u akcijskom setu nad kojim se provela operacija istraživanja novih pravila.
+Operacija otkrivanja novih pravila provodi se ukoliko je prosječno vrijeme proteklo od prošlog pokretanja operacije otkrivanja nad pravilima unutar akcijskog skupa veće od vremena određenog konstantom $\theta_{GA}$.
 Ukoliko to nije zadovoljeno, ovaj se korak preskače.
 
-Prilikom operacije otkrivanja, najprije se iz akcijskog skupa izabiru dva roditeljska klasifikatora.
-Odabir roditeljskih klasifikatora ostvaren je turnirskom selekcijom \engl{Tournament selection} u ovisnosti o parametru dobrote.
-Prilikom turnirske selekcije, nasumično se odabire unaprijed zadani broj klasifikatora, te se kao pobjednika odabire onaj koji od odabranih ima najveću vrijednost dobrote.
-Od izabranih roditeljskih klasifikatora stvaraju se dva potomka, od kojih prvotno svaki ima iste programske isječke uvjeta kao jedan od roditelja.
+Prilikom operacije otkrivanja, najprije se iz akcijskog skupa izabiru dva roditeljska pravila.
+Odabir roditeljskih pravila ostvaren je turnirskom selekcijom \engl{tournament selection} u ovisnosti o parametru dobrote.
+Prilikom turnirske selekcije, nasumično se odabire unaprijed zadani broj pravila, te se kao pobjednika odabire onaj koji od odabranih ima najveću vrijednost dobrote.
+Od izabranih roditeljskih pravila stvaraju se dva potomka, od kojih prvotno svaki ima iste programske isječke uvjeta kao jedan od roditelja.
 
-Nakon toga, s vjerojatnošću $\chi$ provodi se križanje \engl{Crossover} potomaka.
-Križanje je ostvarenom operacijom križanja u dvije točke \engl{Two-point crossover} kako je prikazano algoritmom \ref{alg:cross}.
+Nakon toga, s vjerojatnošću $\chi$ provodi se križanje potomaka.
+Križanje je ostvarenom operacijom križanja u dvije točke \engl{two-point crossover} kako je prikazano algoritmom \ref{alg:cross}.
 \begin{algorithm}[h]
     \caption{Križanje u dvije točke}
     \label{alg:cross}
     \begin{algorithmic}
-        \STATE{\textbf{Ulaz:} $cl_{1}$ -- prvi klasifikator, $cl_{2}$ -- drugi klasifikator.}
+        \STATE{\textbf{Ulaz:} $cl_{1}$ -- prvo pravilo, $cl_{2}$ -- drugo pravilo.}
         \STATE{\textbf{Izlaz:} -}
         \STATE{$x :=$ proizvoljan decimalni broj iz intervala [0, n)}
         \STATE{$y :=$ proizvoljan decimalni broj iz intervala [0, n)}
@@ -528,14 +527,14 @@ Križanje je ostvarenom operacijom križanja u dvije točke \engl{Two-point cros
         \ENDFOR
     \end{algorithmic}
 \end{algorithm}
-Prilikom križanja u dvije točke, proizvoljno se odabiru dva mjesta unutar uvjeta klasifikatora koja se križaju, te se zamjene svi programski isječci između njih.
+Prilikom križanja u dvije točke, proizvoljno se odabiru dva mjesta unutar uvjeta pravila koja se križaju, te se zamjene svi programski isječci između njih.
 Unutar algoritma, varijabla $n$ sadrži duljinu uvjeta, odnosno broj programskih isječaka.
 Programski isječci se ovdje ne mijenjaju, samo se razmjenjuju između potomaka.
-Također, prilikom operacije križanja, akcije koje klasifikatori zagovaraju se ne mijenjaju.
+Također, prilikom operacije križanja, akcije koje pravila zagovaraju se ne mijenjaju.
 
 Nakon toga, nad potomcima se provodi mutacija, u kojoj svaki programski isječak uvjeta ima vjerojatnost mutacije $\mu$.
-Mutacija, za razliku od križanja, djeluje i na uvjete klasifikatora i na akcije.
-Tijekom mutacije, svaki \emph{don't care} simbol zamjenjuje se proizvoljno generiranim programskim isječkom koji odgovara stanju $s$ dobivenom iz okoline, a svaki drugi programski isječak zamjenjuje se \emph{don't care} simbolom.
+Mutacija, za razliku od križanja, djeluje i na uvjete pravila i na akcije.
+Tijekom mutacije, svaki simbol \emph{don't care} zamjenjuje se proizvoljno generiranim programskim isječkom koji odgovara stanju $s$ dobivenom iz okoline, a svaki drugi programski isječak zamjenjuje se simbolom \emph{don't care}.
 Na poslijetku, akcije potomaka također bivaju mutirane s vjerojatnošću $\mu$, pri čemu se akcija mijenja u bilo koju drugu akciju (u ovom radu su jedine moguće akcije 0 ili 1, stoga 0 postaje 1, a 1 postaje 0).
 Nakon mutacije, mutirani potomak još uvijek odgovara stanju $s$.
 Operacija mutacije prikazana je algoritmom \ref{alg:mut}
@@ -572,17 +571,17 @@ Prije dodavanja nastalih potomaka u populaciju, pokreće se operacija provjere o
 Roditelj obuhvaća potomka, ako uvjet roditelja logički obuhvaća uvjet potomka.
 Razlog ovoj operaciji je taj što u slučaju da roditelj obuhvaća potomka, dodavanjem potomka u populaciju ne bi se poboljšala sposobnost sustava, jer roditelj sadrži sve informacije koje sadrži i potomak \citep{1}.
 Da bi se uopće mogla pokrenuti provjera, roditelj mora biti precizan i dovoljno iskusan.
-Konstanta $\theta_{sub}$ sadrži donju granicu iskustva klasifikatora da bi se za njega moglo reći da je dovoljno iskusan za ovu operaciju, dok konstanta $\epsilon_{0}$ sadrži gornju granicu pogreške u predviđanju klasifikatora da bi on bio dovoljno precizan.
-Roditelj može obuhvatiti potomka ako oba klasifikatora zagovaraju istu akciju, ako je roditelj precizan i dovoljno iskusan i ako je roditelj općenitiji od potomka.
-Uvođenjem programskih isječaka umjesto ternarnih simbola u uvjete klasifikatora, maknuta je važnost poretka programskih isječaka unutar uvjeta.
+Konstanta $\theta_{sub}$ sadrži donju granicu iskustva pravila da bi se za njega moglo reći da je dovoljno iskusno za ovu operaciju, dok konstanta $\epsilon_{0}$ sadrži gornju granicu pogreške u predviđanju pravila da bi oni bilo dovoljno precizno.
+Roditelj može obuhvatiti potomka ako oba pravila zagovaraju istu akciju, ako je roditelj precizan i dovoljno iskusan i ako je roditelj općenitiji od potomka.
+Uvođenjem programskih isječaka umjesto simbola ternarne abecede u uvjete pravila, maknuta je važnost poretka programskih isječaka unutar uvjeta.
 Iz tog razloga, prilikom ispitivanja je li roditelj općenitiji od djeteta u obzir su uzeti skupovi programskih odsječaka \citep{4}.
 Operacija provjere je li jedno pravilo općenitije od drugog prikazana je algoritmom \ref{alg:general}
 \begin{algorithm}
     \caption{Općenitije pravilo}
     \label{alg:general}
     \begin{algorithmic}
-        \STATE{\textbf{Ulaz:} $cl_{1}$ -- općenitiji klasifikator, $cl_{2}$ -- specifičniji klasifikator.}
-        \STATE{\textbf{Izlaz:} -- je li klasifikator $cl_{1}$ općenitiji od $cl_{2}$}
+        \STATE{\textbf{Ulaz:} $cl_{1}$ -- općenitije pravilo, $cl_{2}$ -- specifičnije pravilo.}
+        \STATE{\textbf{Izlaz:} -- je li pravilo $cl_{1}$ općenitije od $cl_{2}$}
         \STATE{$x :=$ broj \emph{don't care} simbola u $cl_{1}$}
         \STATE{$y :=$ broj \emph{don't care} simbola u $cl_{2}$}
         \IF{$x \leq y$}
@@ -596,30 +595,30 @@ Operacija provjere je li jedno pravilo općenitije od drugog prikazana je algori
         \RETURN{$true$}
     \end{algorithmic}
 \end{algorithm}
-Da bi klasifikator $cl_{1}$ bio općenitiji od klasifikatora $cl_{2}$, $cl_{1}$ mora imati više \emph{don't care} simbola od klasifikatora $cl_{2}$, a svaki ostali programski isječak klasifikatora $cl_{1}$ mora biti sadržan u $cl_{2}$.
+Da bi pravilo $cl_{1}$ bilo općenitije od pravila $cl_{2}$, $cl_{1}$ mora imati više simbola \emph{don't care} od pravila $cl_{2}$, a svaki ostali programski isječak pravila $cl_{1}$ mora biti sadržan u $cl_{2}$.
 Ako se pokaže da roditelj obuhvaća potomka, umjesto dodavanja tog potomka u populaciju, roditelju se parametar brojnosti povećava za 1.
 
 Nakon provjere obuhvaća li roditelj potomka, pokreće se provjera obuhvaćanja unutar cijelog akcijskog skupa [\emph{A}].
-Pretražuje se akcijski skup i pronalazi se klasifikator koji je precizan i dovoljno iskusan, a ima najveći udio \emph{don't care} simbola.
-Da bi klasifikator bio precizan i dovoljno iskusan za obuhvaćanje drugih klasifikatora, on mora ispunjavati isti uvjet kao i u prethodnom koraku.
-Nakon pronalaženja takvog klasifikatora $cl$, ponovno se prolazi kroz akcijski skup i za svaki klasifikator $c$ od kojega je $cl$ općenitije, klasifikatoru $cl$ se brojnost povećava za brojnost klasifikatora $c$, a klasifikator $c$ se briše iz populacije.
+Pretražuje se akcijski skup i pronalazi se pravilo koje je precizno i dovoljno iskusno, a ima najveći udio simbola \emph{don't care}.
+Da bi pravilo bilo precizno i dovoljno iskusno za obuhvaćanje drugih pravila, ono mora ispunjavati isti uvjet kao i u prethodnom koraku.
+Nakon pronalaženja takvog pravila $cl$, ponovno se prolazi kroz akcijski skup i za svako pravilo $c$ od kojega je $cl$ općenitije, pravilu $cl$ se brojnost povećava za brojnost pravila $c$, a klasifikator $c$ se briše iz populacije.
 
-Nadalje, prilikom dodavanja novog klasifikatora $cl$ u populaciju, potrebno je proći kroz ostale klasifikatore u populaciji i provjeriti postoji li već klasifikator koji je jednak klasifikatoru $cl$.
-Ako takav klasifikator postoji, $cl$ se ne dodaje u populaciju, nego se pronađenom klasifikatoru brojnost poveća za 1.
-Postupak provjere jednakosti klasifikatora također je drugačiji u odnosu na klasični XCS sustav.
-Ponovno nije bitno da poredak programskih isječaka u klasifikatorima bude jednak, nego da klasifikatori sadrže jednake isječke, neovisno o poziciji.
-Postupak provjere jednakosti klasifikatora prikazan je algoritmom \ref{alg:eq}.
+Nadalje, prilikom dodavanja novog pravila $cl$ u populaciju, potrebno je proći kroz ostala pravila u populaciji i provjeriti postoji li već pravilo koje je jednako pravilu $cl$.
+Ako takvo pravilo postoji, $cl$ se ne dodaje u populaciju, nego se pronađenom pravilu brojnost poveća za 1.
+Postupak provjere jednakosti pravila također je drugačiji u odnosu na klasični sustav XCS.
+Ponovno nije bitno da poredak programskih isječaka u pravilima bude jednak, nego da pravila sadrže jednake isječke, neovisno o poziciji.
+Postupak provjere jednakosti pravila prikazan je algoritmom \ref{alg:eq}.
 \begin{algorithm}
     \caption{Jednakost pravila}
     \label{alg:eq}
     \begin{algorithmic}
-        \STATE{\textbf{Ulaz:} $cl_{1}$ -- prvi klasifikator, $cl_{2}$ -- drugi klasifikator.}
-        \STATE{\textbf{Izlaz:} -- je li klasifikator $cl_{1}$ općenitiji od $cl_{2}$}
+        \STATE{\textbf{Ulaz:} $cl_{1}$ -- prvo pravilo, $cl_{2}$ -- drugo pravilo.}
+        \STATE{\textbf{Izlaz:} -- je li pravilo $cl_{1}$ općenitije od $cl_{2}$}
         \IF{$cl_{1}.action \neq cl_{2}.action$}
         \RETURN{$false$}
         \ENDIF
-        \STATE{$x :=$ broj \emph{don't care} simbola u $cl_{1}$}
-        \STATE{$y :=$ broj \emph{don't care} simbola u $cl_{2}$}
+        \STATE{$x :=$ broj simbola \emph{don't care} u $cl_{1}$}
+        \STATE{$y :=$ broj simbola \emph{don't care} u $cl_{2}$}
         \IF{$x \neq y$}
         \RETURN{$false$}
         \ENDIF
@@ -631,11 +630,11 @@ Postupak provjere jednakosti klasifikatora prikazan je algoritmom \ref{alg:eq}.
         \RETURN{$true$}
     \end{algorithmic}
 \end{algorithm}
-Da bi klasifikatori bili jednaki, oni moraju zagovarati istu akciju, moraju imati jednak broj \emph{don't care} simbola, a skupovi ostalih programskih isječaka tih klasifikatora moraju biti jednaki.
+Da bi pravila bila jednaka, ona moraju zagovarati istu akciju, moraju imati jednak broj simbola \emph{don't care}, a skupovi ostalih programskih isječaka tih pravila moraju biti jednaki.
 
 Prilikom generiranja proizvoljnih programskih isječaka, kao listovi unutar binarnog stabla, osim terminalnih čvorova, koriste se i programski isječci naučeni na jednostavnijim problemima unutar iste domene \citep{4}.
-Po završetku učenja određenog problema, sakupljeni su programski isječci sadržani unutar preciznih i iskusnih klasifikatora konačne populacije.
-Klasifikator je precizan i dovoljno iskusan za korištenje pri učenju težeg problema ako je njegovo iskustvo veće od konstante $\theta_{re}$ i ako je njegova dobrota veća od prosječne dobrote konačne populacije.
+Po završetku učenja određenog problema, sakupljeni su programski isječci sadržani unutar preciznih i iskusnih pravila konačne populacije.
+Pravilo je precizno i dovoljno iskusno za korištenje pri učenju težeg problema ako je njegovo iskustvo veće od konstante $\theta_{re}$ i ako je njegova dobrota veća od prosječne dobrote konačne populacije.
 Primjer ponovnog korištenja naučenih programskih isječaka prikazan je u tablici \ref{tbl:reuse}.
 U tablici je različitim programskim isječcima dano ime zbog jednostavnijeg referenciranja.
 Vidi se da su isječci naučeni na najjednostavnijem 4/1 multipleksoru korišteni kao listovi unutar isječaka 8/1 multipleksora.
@@ -659,22 +658,22 @@ Jednako tako, u 16/1 multipleksoru, korišteni su isječci naučeni i na 4/1 i 8
     \end{tabular}
 \end{table}
 
-U \emph{exploit} načinu rada, XCS sustav se ne mijenja, nego izvršava najbolju moguću akciju.
-Početak je isti kao i u \emph{explore} načinu rada.
-Formira se podudarni skup koji se sastoji od klasifikatora koji odgovaraju ulazu $s$.
-U ovisnosti o klasifikatorima sadržanim u [\emph{M}], formira se \emph{polje predviđanja}, na isti način kako je opisano u \emph{explore} načinu rada.
+U načinu rada \emph{iskoristi}, sustav XCS se ne mijenja, nego izvršava najbolju moguću akciju.
+Početak je isti kao i u načinu rada \emph{istraži}.
+Formira se podudarni skup koji se sastoji od pravila koja odgovaraju ulazu $s$.
+U ovisnosti o pravilima sadržanim u [\emph{M}], formira se \emph{polje predviđanja}, na isti način kako je opisano u načinu rada \emph{istraži}.
 Na temelju formiranog \emph{polja predviđanja}, odabire se akcija $a$ s najvećom vrijednosti $P(a)$.
-Ovaj odabir je drugačiji od onog opisanog u \emph{explore} načinu rada, u kojem se akcija $a$ odabire \emph{Roulette-Wheel} postupkom u ovisnosti o vrijednosti $P(a)$.
+Ovaj odabir je drugačiji od onog opisanog u načinu rada \emph{istraži}, u kojem se akcija $a$ odabire \emph{Roulette-Wheel} postupkom u ovisnosti o vrijednosti $P(a)$.
 
-\emph{Explore} i \emph{exploit} načini rada se međusobno izmjenju, pri čemu \emph{exploit} način rada služi testiranju sposobnosti sustava.
+Načini rada \emph{istraži} i \emph{iskoristi} se međusobno izmjenju, pri čemu način rada \emph{iskoristi} služi testiranju sposobnosti sustava.
 
 \chapter{Rezultati} \label{ch:res}
 Prilikom testiranja rada sustava, korištene vrijednosti parametara sustava su podešene kao u \citep{4}.
-Stopa učenja $\beta = 0.2$, stopa propadanja dobrote $\alpha = 0.1$, granica pogreške predviđanja $\epsilon_{0} = 10$, eksponent propadanja dobrote $\nu = 5$, granica prosječnog proteklog vremena prilikom istraživanja novih pravila $\theta_{GA} = 25$, vjerojatnost križanja u dvije točke $\chi = 0.8$, vjerojatnost mutacije $\mu$, granica iskustva pri brisanju klasifikatora $\theta_{del} = 20$, postotak srednje vrijednosti dobrote prilikom brisanja $\delta = 0.1$, granica iskustva prilikom obuhvaćanja $\theta_{sub} = 20$, vjerojatnost pojavljivanja \emph{don't care} simbola $P_{don'tCare} = 0.33$, propadanje pogreške predviđanja $predictionErrorReduction = 0.25$, propadanje dobrote $fitnessReduction = 0.1$.
-Veličina turnira prilikom turnirske selekcije je $40\%$ veličine djelotvornog skupa.
+Stopa učenja $\beta = 0.2$, stopa propadanja dobrote $\alpha = 0.1$, granica pogreške predviđanja $\epsilon_{0} = 10$, eksponent propadanja dobrote $\nu = 5$, granica prosječnog proteklog vremena prilikom istraživanja novih pravila $\theta_{GA} = 25$, vjerojatnost križanja u dvije točke $\chi = 0.8$, vjerojatnost mutacije $\mu$, granica iskustva pri brisanju pravila $\theta_{del} = 20$, postotak srednje vrijednosti dobrote prilikom brisanja $\delta = 0.1$, granica iskustva prilikom obuhvaćanja $\theta_{sub} = 20$, vjerojatnost pojavljivanja simbola \emph{don't care} $P_{don'tCare} = 0.33$, propadanje pogreške predviđanja $predictionErrorReduction = 0.25$, propadanje dobrote $fitnessReduction = 0.1$.
+Veličina turnira prilikom turnirske selekcije je $40\%$ veličine akcijskog skupa.
 Nagrada okoline iznosi 1000 za ispravnu klasifikaciju, a 0 za neispravnu.
 Prilikom generiranja novih programskih isječaka, terminalni čvor ima 50\% vjerojatnosti poprimanja programskog isječka naučenog na nižim razinama.
-Na osi apscisa nalazi se broj do tad korištenih testnih primjera, a na osi ordinata pomični udio točno klasificiranih primjera prilikom prethodnih 1000 \emph{exploit} iteracija.
+Na osi apscisa nalazi se broj do tad korištenih testnih primjera, a na osi ordinata pomični udio točno klasificiranih primjera prilikom prethodnih 1000 iteracija \emph{iskoristi}.
 
 Sva testiranja odrađena su na AMD A10-8700p četverojezgrenom procesoru frekvencije 1.8 GHz i radnoj memoriji od 12 GB.
 
@@ -757,8 +756,8 @@ Posebno je zanimljivo pogledati sliku \ref{fig:37muxnre} iz koje se vidi da u ov
     \caption{Prikaz učenja 6 bitnog multipleksora u ovisnosti o broju programskih isječaka koje klasifikatori sadržavaju.}
     \label{img:6bitcond}
 \end{figure}
-S obzirom da je, uvođenjem programskih isječaka umjesto uvjetnih bitova, maknuta ovisnost duljine ulaza dobivenog od okoline i broja uvjetnih bitova unutar klasifikatora, prilikom korištenja XCSCFC sustava moguće je imati broj programskih isječaka različit od veličine ulaza.
-U svrhu testiranja ovisnosti broja programskih isječaka unutar pojedinog klasifikatora i kvalitete XCSCFC sustava, na slici \ref{img:6bitcond} prikazan je graf ponašanja sustava na 4/1 multipleksoru s različitim brojevima programskih isječaka.
+S obzirom da je, uvođenjem programskih isječaka umjesto uvjetnih bitova, maknuta ovisnost duljine ulaza dobivenog od okoline i broja uvjetnih bitova unutar pravila, prilikom korištenja XCSCFC sustava moguće je imati broj programskih isječaka različit od veličine ulaza.
+U svrhu testiranja ovisnosti broja programskih isječaka unutar pojedinog pravila i kvalitete XCSCFC sustava, na slici \ref{img:6bitcond} prikazan je graf ponašanja sustava na 4/1 multipleksoru s različitim brojevima programskih isječaka.
 Rezultat je očekivan, a vidi se i da između korištenja jednog programskog isječka i korištenja dva programska isječka u ovom primjeru nema razlike.
 
 \begin{figure}[!h]
@@ -824,7 +823,7 @@ Veličina populacije $N$ redom je 200, 300, 400, 500 za 2-, 3-, 4- i 5-bitni pro
 Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
 Iz slike se vidi da je problem s 2 bita (slika \ref{fig:2pare}) riješen s jako velikom točnošću, ali zbog toga što je vjerojatno naučen na pamet.
 Iz slike \ref{fig:3pare} se vidi da se već prilikom učenja za 3 bita javljaju problemi.
-Na problemu s 5 bita (\ref{fig:5pare}) sustav nije uspio ništa generalizirati i rezultat je skroz proizvoljan.
+Na problemu s 5 bita (\ref{fig:5pare}) sustav nije uspio ništa generalizirati i rezultat je gotovo proizvoljan.
 
 \begin{figure}[!h]
     \centering
@@ -858,7 +857,7 @@ Na problemu s 5 bita (\ref{fig:5pare}) sustav nije uspio ništa generalizirati i
 Rezultati na problemu određivanja bita prijenosa prilikom zbrajanja binarnih brojeva prikazani su grafom na slici \ref{fig:care}.
 
 \chapter{Zaključak} \label{ch:zak}
-XCS sustav pokazao se kao vrlo složen, koji za neke probleme (npr. multipleksor) radi iznimno dobro, a za neke (npr. paritet) poprilično loše.
+Susta XCS pokazao se kao vrlo složen, koji za neke probleme (npr. multipleksor) radi iznimno dobro, a za neke (npr. paritet) poprilično loše.
 
 Zbog podjele sustava u više dijelova koji slijedno djeluju, otvara se puno prostora za isprobavanje.
 Sustav ima brojne parametre s kojima se može eksperimentirati i prilagoditi ga problemu koji se rješava.
@@ -867,7 +866,7 @@ U okviru ovog rada isproban je rad sustava samo na booleovim funkcijama, ali one
 Budući rad na ovom sustavu može uključivati prilagodbu sustava za klasifikaciju (npr. jednostavnih slika) u više razreda.
 
 Ovaj rad je motiviran radom prikazanim u \citep{4}, no ovdje su rezultati nešto lošiji nego što je prikazano u navedenom radu.
-Razlog je najvjerojatnije taj što neki dijelovi nisu najdetaljnije objašnjeni, ali glavna poanta rada je usvojena.
+Razlog je najvjerojatnije taj što neki dijelovi nisu precizno objašnjeni, ali glavna poanta rada je usvojena.
 
 Na primjeru multipleksora pokazano je da korištenje znanja prethodno naučenog na jednostavnijim primjerima unutar iste domene poboljšava rezultate sustava.
 Znanje s nižih razina uspješno je sakupljeno i proslijeđeno prilikom učenja na težim problemima u domeni.
