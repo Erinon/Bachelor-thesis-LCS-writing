@@ -204,7 +204,7 @@ Očekivani izlaz bi u ovom slučaju bio 0.
 Problem paritetnog bita svodi se na ispitivanje broja pojavljivanja bita 1 unutar ulaza.
 Sklop za određivanje paritetnog bita za parni paritet na ulaz prima $n$-bitni binarni broj te vraća broj s ulaza proširen jednim dodatnim bitom, koji osigurava da je broj pojavljivanja bita 1 paran, odnosno osigurava parni paritet.
 Dodani bit naziva se paritetni bit.
-Ako je broj pojavljivanja bita 1 paran, broj se treba proširiti bitom 0, a u suprotnom bitom 1.
+Ako je broj pojavljivanja bita 1 na ulazu paran, broj se treba proširiti bitom 0, a u suprotnom bitom 1.
 Primjer jednog takvog sklopa koji radi za 6-bitne binarne brojeve prikazan je na slici \ref{img:parex}. Prikazani sklop na ulaz prima 6-bitni binarni broj 011010.
 Ulazni podatak ima neparan broj (3) jedinica, dakle treba ga proširiti bitom 1.
 Sklop na izlazu vraća 7-bitni binarni broj \textbf{1}011010 koji ima paran broj (4) jedinica.
@@ -220,7 +220,7 @@ Prilikom problema najzastupljenijeg bita, ispituje se frekvencija pojavljivanja 
 Sklop za određivanje najzastupljenijeg bita na ulaz prima $n$-bitni binarni broj i na izlaz vraća samo jedan bit, bit koji se najviše puta pojavio u ulaznom binarnom broju.
 Primjer jednog takvog sklopa koji na ulaz prima 7-bitni binarni broj prikazan je na slici \ref{img:majex}.
 Ulaz u sklop je binarni broj 1011010.
-Ulazni broj ima 4 bita i 3 bita 0.
+Ulazni broj ima 4 bita 1 i 3 bita 0.
 S obzirom da je broj pojavljivanja bita 1 veći od broja pojavljivanja bita 0, na izlaz se vraća bit 1.
 Prilikom rješavanja problema najzastupljenijeg bita, ulazni brojevi uvijek su neparne duljine, kako bi se izbjeglo pojavljivanje jednakog broja bitova 0 i bitova 1.
 \begin{figure}[h]
@@ -255,13 +255,13 @@ Ulazni podatak uvijek će biti parne duljine $2n$, kako bi se on mogao interpret
 U sklopu razrade ovog sustava, potrebno je ostvariti iskorištavanje znanja već naučenog na jednostavnijim problemima.
 Klasični bitovi uvjeta u ranije opisanim pravilima nam to onemogućavaju.
 Iz tog razloga, svaki bit uvjeta zamijenjen je programskim isječkom, koji ovisno o ulazu, vraća 0 ili 1.
-Takav XCS sustav, koji koristi programske isječke umjesto uvjetnih bitova, naziva se XCSCFC\footnote{Kratica dolazi od engleskog "\emph{XCS with code-fragment conditions}".}.
-Na taj način, prilikom stvaranja novih pravila, ona mogu sadržavati programske isječke izvučene iz klasifikatora koji su rješavali jednostavniji problem u istoj domeni.
-Prilikom preuzimanja programskih isječaka, u obzir dolaze samo precizni i iskusni klasifikatori čija dobrota \engl{fitness} je veća od prosječne unutar te populacije klasifikatora \citep{4}.
+Takav sustav XCS, koji koristi programske isječke umjesto uvjetnih bitova, naziva se XCSCFC\footnote{Kratica dolazi od engl. \emph{XCS with code-fragment conditions}.}.
+Na taj način, prilikom stvaranja novih pravila, ona mogu sadržavati programske isječke izvučene iz pravila koja su rješavala jednostavniji problem u istoj domeni.
+Prilikom preuzimanja programskih isječaka, u obzir dolaze samo precizna i iskusna pravila čija dobrota \engl{fitness} je veća od prosječne unutar te populacije pravila \citep{4}.
 
-U ovom radu, isječci koda modelirani su binarnim stablima duljine do najviše 2, što znači da je moguće imati najviše 7 čvorova.
+U ovom radu, isječci koda modelirani su binarnim stablima dubine do najviše 2, što znači da je moguće imati najviše 7 čvorova.
 Skup funkcija koje čvorovi mogu obavljati je $\{AND, OR, NAND, NOR, NOT\}$.
-U primjerima, te se funkcije redom označavaju s $\&, |, d, r, \sim$.
+U primjerima, te su funkcije redom označene s $\&, |, d, r, \sim$.
 Skup mogućih završnih (terminalnih) čvorova pojedinog binarnog stabla je $\{D_{0}, D_{1}, ..., D_{n - 1}\}$, gdje \emph{n} predstavlja duljinu ulaza dobivenog od okoline.
 Svaki završni čvor predstavlja točno jedan bit ulaza.
 Svaki programski isječak na ulaz dobiva cijeli ulaz dobiven od okoline, a na izlazu vraća rezultat operacija koje se nalaze u čvorovima stabla.
@@ -275,7 +275,7 @@ Iz slike je vidljivo da se u binarnom stablu ne moraju pojavljivati svi bitovi u
     \label{tree}
 \end{figure}
 
-Potreban je i programski isječak koji označava \emph{don't care} simbol, a koji za svaki niz bitova koje dobije na ulazu, na izlazu vraća 1.
+Potreban je i programski isječak koji označava simbol \emph{don't care}, a koji za svaki niz bitova koje dobije na ulazu, na izlazu vraća 1.
 On je prikazan na slici \ref{dnc} i označava operaciju $D_{0}D_{0}\sim|$, a preuzet je iz \citep{4}.
 \begin{figure}[h]
     \centering
@@ -285,21 +285,21 @@ On je prikazan na slici \ref{dnc} i označava operaciju $D_{0}D_{0}\sim|$, a pre
 \end{figure}
 
 Prije detaljnog objašnjenja korištenih algoritama, potrebno je naglasiti da su u implementaciji korišteni makroklasifikatori \engl{macroclassifiers} \citep{2}.
-Makroklasifikatori su klasifikatori koji imaju dodatan parametar brojnosti \engl{numerosity}.
+Makroklasifikatori su pravila koji imaju dodatan parametar brojnosti \engl{numerosity}.
 Razlog korištenju makroklasifikatora je bolja vremenska i prostorna složenost sustava.
-Naime, klasifikatori koji imaju jednaki uvjet i akciju sadržani su u istom klasifikatoru, ali je njegova brojnost u tom slučaju veća od 1.
-Brojnost klasifikatora $cl$ sadržana je u parametru $cl.n$.
-Ako u populaciji postoji $n$ klasifikatora koji imaju jednak uvjet i akciju, to je zapisano u jednom klasifikatoru čija je brojnost u tom slučaju postavljena na $n$.
+Naime, pravila koja imaju jednaki uvjet i akciju sadržana su u istom pravilu, ali je njegova brojnost u tom slučaju veća od 1.
+Brojnost pravila $cl$ sadržana je u varijabli $cl.n$.
+Ako u populaciji postoji $n$ pravila koji imaju jednak uvjet i akciju, to je zapisano u jednom pravilu čija je brojnost u tom slučaju postavljena na $n$.
 Kod korištenja makroklasifikatora, prilikom svih izračuna potrebno je u obzir uzeti i parametar brojnosti.
 
-U \emph{Explore} načinu rada, na početku se od okoline dobije ulazni podatak \emph{s}.
-U ovisnosti o \emph{s}, formira se \emph{podudarni skup} \engl{Match set} [\emph{M}].
-[\emph{M}] se sastoji od svih klasifikatora iz populacije [\emph{P}] koji odgovaraju ulazu \emph{s}.
+U načinu rada \emph{istraži}, na početku se od okoline dobije ulazni podatak $s$.
+U ovisnosti o $s$, formira se \emph{podudarni skup} [\emph{M}].
+[\emph{M}] se sastoji od svih pravila iz populacije [\emph{P}] koji odgovaraju ulazu $s$.
 
-Za klasifikator \emph{cl}\footnote{Od engleskog "\emph{Classifier}"} kažemo da odgovara ulazu \emph{s}, ako svaki programski isječak za zadani ulaz \emph{s} na izlazu daje 1.
-S obzirom da svaki programski isječak unutar uvjeta klasifikatora na ulaz dobiva cijeli \emph{s}, poredak programskih isječaka uopće nije bitan.
-Algoritam \ref{match} prikazuje postupak evalucaije klasifikatora \emph{cl} u odnosu na ulaz \emph{s}.
-Pri tome \emph{cf} označava \emph{i}-ti programski isječak unutar zadanog klasifikatora \emph{cl}, a \emph{val} rezultat programskog isječka \emph{cf} s obzirom na zadani ulaz \emph{s}.
+Za pravilo $cl$\footnote{Kratica dolazi od engl. \emph{classifier}. Naime, u ovom je slučaju cijeli sustav jedan klasifikator koji raspoređuje podatke u razrede, ali i za svako pravilo se može reći da je jedan mali klasifikator. S obzirom da samo pravilo pojedinačno ne radi ispravnu klasifikaciju, ovdje ga ispravine zovemo \emph{pravilo}, a ne \emph{klasifikator}.} kažemo da odgovara ulazu $s$, ako svaki programski isječak za zadani ulaz $s$ na izlazu daje 1.
+S obzirom da svaki programski isječak unutar uvjeta pravila na ulaz dobiva cijeli $s$, poredak programskih isječaka unutar pravila uopće nije bitan.
+Algoritam \ref{match} prikazuje postupak evalucaije pravila $cl$ u odnosu na ulaz $s$.
+Pri tome $cf$ označava \emph{i}-ti programski isječak unutar zadanog pravila $cl$, a \emph{val} rezultat programskog isječka $cf$ s obzirom na zadani ulaz $s$.
 \emph{n} je duljina uvjeta unutar pravila, odnosno broj programskih isječaka koji se nalaze u klasifikatoru.
 \emph{cl.cond} je polje svih programskih isječaka.
 Algoritam vraća vrijednost \emph{true} ako svaki programski isječak za zadani ulaz \emph{s} vraća vrijednost 1, a \emph{false} inače.
