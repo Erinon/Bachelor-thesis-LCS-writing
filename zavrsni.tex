@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage{multirow}
 \usepackage{subcaption}
+\usepackage{pdfpages}
 
 \begin{document}
 
@@ -20,8 +21,7 @@
 
 \maketitle
 
-% Ispis stranice s napomenom o umetanju izvornika rada. Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
-\izvornik
+\includepdf{izvornik.pdf}
 
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
 \zahvala{}
@@ -96,7 +96,7 @@ Ažuriranje tih parametara obavlja se tehnikama \emph{podržanog učenja} \engl{
     \caption{Položaj \emph{podržanog učenja} unutar \emph{strojnog učenja}.}
     \label{img:repol}
 \end{figure}
-\emph{Podržano učenje} grana je \emph{strojnog učenja} \engl{machine learning} zajedno za \emph{nadziranim} \engl{supervised} i \emph{nenadziranim učenjem} \engl{unsupervised learning}, kao što je prikazano na slici \ref{img:repol}.
+\emph{Podržano učenje} grana je \emph{strojnog učenja} \engl{machine learning} zajedno sa \emph{nadziranim} \engl{supervised} i \emph{nenadziranim učenjem} \engl{unsupervised learning}, kao što je prikazano na slici \ref{img:repol}.
 \emph{Podržano učenje} temeljeno je na pokušajima, nakon kojih sustav dobije određenu brojčanu nagradu.
 Cilj sustava temeljenog na podržanom učenju je maksimizirati nagradu koju sustav dobije izvršavanjem neke akcije.
 U ovisnosti o dobivenoj nagradi, sustav podešava svoje parametre kako bi s vremenom dobivao sve veću i veću nagradu.
@@ -104,7 +104,7 @@ Značajka \emph{podržanog učenja} je da sustav ne uči na poznatim točnim ish
 Na taj način je sustav primoran učiti samo iz svog prethodnog iskustva.
 Detaljniju analizu \emph{podržanog učenja} čitatelj može pronaći u \citep{7}.
 
-Dva glavna pristupa u implementaciji sustava LCS su \emph{michiganski stil} \engl{Michigan-Style} i \emph{pittsburgski stil} \emph{Pittsburgh-Style}.
+Dva glavna pristupa u implementaciji sustava LCS su \emph{michiganski stil} \engl{Michigan-Style} i \emph{pittsburgski stil} \engl{Pittsburgh-Style}.
 \emph{Pittsburgski stil} sustava LCS sadrži skup jedinki od kojih je svaka moguće konačno rješenje sustava.
 Jedna jedinka je cijeli skup pravila, što znači da je karakteristika \emph{pittsburgskog stila} da sadrži više neovisnih skupova pravila.
 Iako pravila moraju biti jednake duljine, svaki skup pravila može sadržavati različit broj pravila.
@@ -115,7 +115,7 @@ U okviru ovog rada obrađen je \emph{michiganski stil} sustava LCS.
 Svako pravilo predstavlja jednu jedinku.
 Jedinka u \emph{michiganskom stilu} sustava LCS ne predstavlja konačno rješenje sustava, nego je konačno rješenje cijeli skup jedinki, odnosno jedinke djeluju zajedno pri rješavanju problema.
 \emph{Michiganski stil} sustava LCS prvi je formalizirao John Holland 1976. godine, a u suradnji s Judith Reitman 1978. dao njegovu implementaciju.
-S obzirom na složenost originalnog LCS sustava, malo jednostavniju i razumljiviju inačicu dao je Stewart W. Wilson pod nazivom ZCS \engl{"zeroth-level" classifier system}.
+S obzirom na složenost originalnog sustava LCS, malo jednostavniju i razumljiviju inačicu dao je Stewart W. Wilson pod nazivom ZCS \engl{"zeroth-level" classifier system}.
 Nakon toga, Wilson je uveo još jednu inačicu sustava LCS pod nazivom XCS, u kojemu je promijenio način na koji se računa $dobrota$ pojedinih pravila.
 U sklopu ovog rada obrađen je sustav XCS, koji je detaljno objašnjen u poglavljima koja slijede, a za detaljniji opis prvotnog sustava LCS i sustava ZCS čitatelj se upućuje na \citep{3}.
 
@@ -181,15 +181,15 @@ Izlaz iz multipleksora je uvijek točno jedan bit, koji ima vrijednost 0 ili 1.
 \begin{figure}[h]
     \centering
     \includegraphics[width=5cm]{img/muxex.pdf}
-    \caption{Konkretan primjer 4/1 multipleksora.}
+    \caption{Konkretan primjer multipleksora 4/1.}
     \label{img:muxex}
 \end{figure}
 Na slici \ref{img:muxex} dan je konkretan primjer multipleksora 4/1.
-Upravljači bitovi ovdje su 01, a ulazni 1010.
+Upravljački bitovi ovdje su $S_{1}S_{0} = 01$, a ulazni $D_{0}D_{1}D_{2}D_{3} = 1010$.
 Upravljački bitovi adresiraju drugi ulaz u multipleksor, stoga se on propušta na izlaz.
-Na izlazu vidimo vrijednost 0, koja odgovara drugom ulazu.
-U implementaciji, ovaj primjer bi na ulaz bio dan kao niz bitova 011010.
-Ulaz se prvo sastoji od upravljačih bitova, a zatim ulaznih.
+Na izlazu vidimo vrijednost $Y = 0$, koja odgovara drugom ulazu.
+U implementaciji, ovaj primjer bi na ulaz bio dan kao niz bitova $S_{1}S_{0}D_{0}D_{1}D_{2}D_{3} = 011010$.
+Ulaz se prvo sastoji od upravljačkih bitova, a zatim ulaznih.
 Očekivani izlaz bi u ovom slučaju bio 0.
 \begin{table}[!htb]
     \caption{Opis rada multipleksora 4/1.}
@@ -206,12 +206,12 @@ Očekivani izlaz bi u ovom slučaju bio 0.
 
 Problem paritetnog bita svodi se na ispitivanje broja pojavljivanja bita 1 unutar ulaza.
 Sklop za određivanje paritetnog bita za parni paritet na ulaz prima $n$-bitni binarni broj te vraća broj s ulaza proširen jednim dodatnim bitom, koji osigurava da je broj pojavljivanja bita 1 paran, odnosno osigurava parni paritet.
-Dodani bit naziva se paritetni bit.
+Dodani bit naziva se \emph{paritetni bit}.
 Ako je broj pojavljivanja bita 1 na ulazu paran, broj se treba proširiti bitom 0, a u suprotnom bitom 1.
 Primjer jednog takvog sklopa koji radi za 6-bitne binarne brojeve prikazan je na slici \ref{img:parex}. Prikazani sklop na ulaz prima 6-bitni binarni broj 011010.
 Ulazni podatak ima neparan broj (3) jedinica, dakle treba ga proširiti bitom 1.
 Sklop na izlazu vraća 7-bitni binarni broj \textbf{1}011010 koji ima paran broj (4) jedinica.
-Prilikom rješavanja ovog problema, razvijeni sustav određuje samo prikazani paritetni bit za parni paritet, a ne cijeli novi $(n + 1)$-bitni broj.
+Prilikom rješavanja ovog problema, razvijeni sustav određuje samo prikazani \emph{paritetni bit} za parni paritet, a ne cijeli novi $(n + 1)$-bitni broj.
 \begin{figure}[h]
     \centering
     \includegraphics[width=5cm]{img/parity.pdf}
@@ -223,7 +223,7 @@ Prilikom problema najzastupljenijeg bita, ispituje se frekvencija pojavljivanja 
 Sklop za određivanje najzastupljenijeg bita na ulaz prima $n$-bitni binarni broj i na izlaz vraća samo jedan bit, bit koji se najviše puta pojavio u ulaznom binarnom broju.
 Primjer jednog takvog sklopa koji na ulaz prima 7-bitni binarni broj prikazan je na slici \ref{img:majex}.
 Ulaz u sklop je binarni broj 1011010.
-Ulazni broj ima 4 bita 1 i 3 bita 0.
+Ulazni broj ima četiri bita 1 i tri bita 0.
 S obzirom da je broj pojavljivanja bita 1 veći od broja pojavljivanja bita 0, na izlaz se vraća bit 1.
 Prilikom rješavanja problema najzastupljenijeg bita, ulazni brojevi uvijek su neparne duljine, kako bi se izbjeglo pojavljivanje jednakog broja bitova 0 i bitova 1.
 \begin{figure}[h]
@@ -292,7 +292,7 @@ Makroklasifikatori su pravila koji imaju dodatan parametar brojnosti \engl{numer
 Razlog korištenju makroklasifikatora je bolja vremenska i prostorna složenost sustava.
 Naime, pravila koja imaju jednaki uvjet i akciju sadržana su u istom pravilu, ali je njegova brojnost u tom slučaju veća od 1.
 Brojnost pravila $cl$ sadržana je u varijabli $cl.n$.
-Ako u populaciji postoji $n$ pravila koji imaju jednak uvjet i akciju, to je zapisano u jednom pravilu čija je brojnost u tom slučaju postavljena na $n$.
+Ako u populaciji postoji $n$ pravila koja imaju jednak uvjet i akciju, to je zapisano u jednom pravilu čija je brojnost u tom slučaju postavljena na $n$.
 Kod korištenja makroklasifikatora, prilikom svih izračuna potrebno je u obzir uzeti i parametar brojnosti.
 
 U načinu rada \emph{istraži}, na početku se od okoline dobije ulazni podatak $s$.
@@ -343,7 +343,7 @@ Pokazano je da se sva tri programska isječka za ovaj ulaz evaluiraju u 1, stoga
 \end{figure}
 
 Nakon formiranja [\emph{M}], provjerava se sadrži li [\emph{M}] sve moguće akcije $a$.
-U slučaju da za neku akciju ne postoji pripadno pravilo, pokreće se operacija pokrivanja \engl{covering operation}, prikazana algoritmom \ref{cover}.
+U slučaju da za neku akciju ne postoji pripadno pravilo, pokreće se operacija pokrivanja, prikazana algoritmom \ref{cover}.
 U operaciji pokrivanja stvara se novo pravilo čiji je svaki programski isječak simbol \emph{don't care} s vjerojatnošću $P_{don'tCare}$, a s vjerojatnošću $1 - P_{don'tCare}$ proizvoljno generirani programski isječak, koji s obzirom na stanje $s$ mora vraćati 1.
 U prikazanom algoritmu, $cl.action$ sadrži akciju koju zagovara pravilo $cl$.
 Operacija pokrivanja pokreće se za svaku akciju koja nedostaje u [\emph{M}], a novo pravilo se dodaje u [\emph{P}] i [\emph{M}].
@@ -358,7 +358,7 @@ Operacija pokrivanja pokreće se za svaku akciju koja nedostaje u [\emph{M}], a 
         \FOR{($i := 0; i < n; i := i + 1$)}
         \STATE{$r$ := proizvoljan decimalni broj iz intervala [0, 1)}
         \IF{$r < P_{don'tCare}$}
-        \STATE{$cl.cond[i]$ := \emph{don't care} simbol}
+        \STATE{$cl.cond[i]$ := simbol \emph{don't care}}
         \ELSE
         \REPEAT
         \STATE{$cf$ := generiraj proizvoljni programski isječak}
@@ -437,7 +437,7 @@ U suprotnom, ako je brojnost 1, pravilo se izbacuje iz populacije.
 Nakon formiranja podudarnog skupa [\emph{M}], potrebno je odrediti akciju koju će sustav izvršiti.
 Akcija se određuje na temelju pravila sadržanih u [\emph{M}].
 Za svaku akciju, potrebno je izračunati srednju vrijednost nagrade koju sustav očekuje izvršavanjem te akcije.
-Ona se označava funkcijom $P(a)$ i računa po formuli \eqref{eq:pred}.
+Ona se označava funkcijom $P(a)$ i računa izrazom \eqref{eq:pred}.
 \begin{equation}
     \label{eq:pred}
     P(a) = \frac{\sum_{cl \in [M] \land cl.a = a} cl.p \cdot cl.F \cdot cl.n}{\sum_{cl \in [M] \land cl.a = a} cl.F \cdot cl.n}
@@ -450,10 +450,10 @@ Vjerojatnost da će akcija $a$ biti izabrana proporcionalna je vrijednosti $P(a)
 
 Nakon odabira akcije $a$, formira se akcijski skup [\emph{A}].
 [\emph{A}] se sastoji od svih pravila iz [\emph{M}] koja zagovaraju $a$.
-Nakon formiranja akcijskog seta izvršava se odabrana akcija $a$ i u ovisnosti o izvršenoj akciji od okoline stiže nagrada $R$.
+Nakon formiranja akcijskog skupa izvršava se odabrana akcija $a$ i u ovisnosti o izvršenoj akciji od okoline stiže nagrada $R$.
 
 Po dobitku nagrade, dolazi do ažuriranja parametara svih pravila sadržanih u [\emph{A}].
-Redom se ažuriraju iskustvo pravila \engl{experience} $exp$, njegovo predviđanje \engl{prediction} $p$, pogreška u predviđanju \engl{rediction error} $\epsilon$, preciznost \engl{accuracy} $\kappa$, relativna preciznost \engl{relative accuracy} $\kappa'$, dobrota $F$ i prosječna veličina akcijskih skupova koji su sadržavali to pravilo \engl{action set size} $as$.
+Redom se ažuriraju iskustvo pravila \engl{experience} $exp$, njegovo predviđanje \engl{prediction} $p$, pogreška u predviđanju \engl{prediction error} $\epsilon$, preciznost \engl{accuracy} $\kappa$, relativna preciznost \engl{relative accuracy} $\kappa'$, dobrota $F$ i prosječna veličina akcijskih skupova koji su sadržavali to pravilo \engl{action set size} $as$.
 Iskustvo pravila $cl$, $cl.exp$, je broj pojavljivanja $cl$ u akcijskom skupu i ažurira se po izrazu \eqref{eq:exp}.
 \begin{equation}
     \label{eq:exp}
@@ -486,7 +486,7 @@ Prije ažuriranja dobrote $F$ pravila, najprije je potrebno izračunati njegovu 
 Pri tome, parametri $\alpha$ $(0 < \alpha < 1)$ i $\nu$ $(\nu > 0)$ kontroliraju brzinu propadanja preciznosti \citep{5}.
 Parametar $\epsilon_{0}$ određuje granicu do koje najviše može doći pogreška u predviđanju $\epsilon$, a da bi se za pravilo moglo reći da je potpuno precizno.
 Ako za pravilo $cl$ vrijedi da je $cl.\epsilon < \epsilon_{0}$, njegova preciznost postaje 1 ($cl.\kappa = 1$), a u suprotnom preciznost ekponencijalno opada ovisno o parametrima $\alpha$ i $\nu$, što je prikazano izrazom \eqref{eq:acc}.
-Nakon što su izračunate preciznosti svih pravila unutar akcijskog seta [\emph{A}], svaka preciznost se normira ukupnom sumom preciznosti, kao što je prikazano izrazom \eqref{eq:racc}.
+Nakon što su izračunate preciznosti svih pravila unutar akcijskog skupa [\emph{A}], svaka preciznost se normira ukupnom sumom preciznosti, kao što je prikazano izrazom \eqref{eq:racc}.
 Kada je izračunata relativna preciznost, dobrota se ažurira prema izrazu \eqref{eq:fit}.
 \begin{equation}
     \label{eq:fit}
@@ -504,10 +504,10 @@ Parametar $\epsilon_{0}$ određuje do koje granice će pravila imati jednaku, ma
 
 Nakon postavljanja parametara, postoji mogućnost za pokretanjem operacije istraživanja novih pravila \engl{discovery component}.
 Svako pravilo dodatno sadrži i parametar koji pamti kada je zadnji put ono sudjelovalo u akcijskom skupu nad kojim se provela operacija istraživanja novih pravila.
-Operacija otkrivanja novih pravila provodi se ukoliko je prosječno vrijeme proteklo od prošlog pokretanja operacije otkrivanja nad pravilima unutar akcijskog skupa veće od vremena određenog konstantom $\theta_{GA}$.
+Operacija istraživanja novih pravila provodi se ukoliko je prosječno vrijeme proteklo od prošlog pokretanja operacije istraživanja nad pravilima unutar akcijskog skupa veće od vremena određenog konstantom $\theta_{GA}$.
 Ukoliko to nije zadovoljeno, ovaj se korak preskače.
 
-Prilikom operacije otkrivanja, najprije se iz akcijskog skupa izabiru dva roditeljska pravila.
+Prilikom operacije istraživanja, najprije se iz akcijskog skupa izabiru dva roditeljska pravila.
 Odabir roditeljskih pravila ostvaren je turnirskom selekcijom \engl{tournament selection} u ovisnosti o parametru dobrote.
 Prilikom turnirske selekcije, nasumično se odabire unaprijed zadani broj pravila, te se kao pobjednika odabire ono koje od odabranih ima najveću vrijednost dobrote.
 Od izabranih roditeljskih pravila stvaraju se dva potomka, od kojih prvotno svaki ima iste programske isječke uvjeta kao jedan od roditelja.
@@ -577,7 +577,7 @@ Da bi se uopće mogla pokrenuti provjera, roditelj mora biti precizan i dovoljno
 Konstanta $\theta_{sub}$ sadrži donju granicu iskustva pravila da bi se za njega moglo reći da je dovoljno iskusno za ovu operaciju, dok konstanta $\epsilon_{0}$ sadrži gornju granicu pogreške u predviđanju pravila da bi oni bilo dovoljno precizno.
 Roditelj može obuhvatiti potomka ako oba pravila zagovaraju istu akciju, ako je roditelj precizan i dovoljno iskusan i ako je roditelj općenitiji od potomka.
 Uvođenjem programskih isječaka umjesto simbola ternarne abecede u uvjete pravila, maknuta je važnost poretka programskih isječaka unutar uvjeta.
-Iz tog razloga, prilikom ispitivanja je li roditelj općenitiji od djeteta u obzir su uzeti skupovi programskih odsječaka \citep{4}.
+Iz tog razloga, prilikom ispitivanja je li roditelj općenitiji od potomka u obzir su uzeti skupovi programskih odsječaka \citep{4}.
 Operacija provjere je li jedno pravilo općenitije od drugog prikazana je algoritmom \ref{alg:general}.
 \begin{algorithm}
     \caption{Općenitije pravilo}
@@ -604,7 +604,7 @@ Ako se pokaže da roditelj obuhvaća potomka, umjesto dodavanja tog potomka u po
 Nakon provjere obuhvaća li roditelj potomka, pokreće se provjera obuhvaćanja unutar cijelog akcijskog skupa [\emph{A}].
 Pretražuje se akcijski skup i pronalazi se pravilo koje je precizno i dovoljno iskusno, a ima najveći udio simbola \emph{don't care}.
 Da bi pravilo bilo precizno i dovoljno iskusno za obuhvaćanje drugih pravila, ono mora ispunjavati isti uvjet kao i u prethodnom koraku.
-Nakon pronalaženja takvog pravila $cl$, ponovno se prolazi kroz akcijski skup i za svako pravilo $c$ od kojega je $cl$ općenitije, pravilu $cl$ se brojnost povećava za brojnost pravila $c$, a klasifikator $c$ se briše iz populacije.
+Nakon pronalaženja takvog pravila $cl$, ponovno se prolazi kroz akcijski skup i za svako pravilo $c$ od kojega je $cl$ općenitije, pravilu $cl$ se brojnost povećava za brojnost pravila $c$, a pravilo $c$ se briše iz populacije.
 
 Nadalje, prilikom dodavanja novog pravila $cl$ u populaciju, potrebno je proći kroz ostala pravila u populaciji i provjeriti postoji li već pravilo koje je jednako pravilu $cl$.
 Ako takvo pravilo postoji, $cl$ se ne dodaje u populaciju, nego se pronađenom pravilu brojnost poveća za 1.
@@ -674,7 +674,7 @@ Načini rada \emph{istraži} i \emph{iskoristi} se međusobno izmjenjuju, pri č
 
 \chapter{Rezultati} \label{ch:res}
 Prilikom testiranja rada sustava, korištene vrijednosti parametara sustava su podešene kao u \citep{4}.
-Stopa učenja $\beta = 0.2$, stopa propadanja dobrote $\alpha = 0.1$, granica pogreške predviđanja $\epsilon_{0} = 10$, eksponent propadanja dobrote $\nu = 5$, granica prosječnog proteklog vremena prilikom istraživanja novih pravila $\theta_{GA} = 25$, vjerojatnost križanja u dvije točke $\chi = 0.8$, vjerojatnost mutacije $\mu$, granica iskustva pri brisanju pravila $\theta_{del} = 20$, postotak srednje vrijednosti dobrote prilikom brisanja $\delta = 0.1$, granica iskustva prilikom obuhvaćanja $\theta_{sub} = 20$, vjerojatnost pojavljivanja simbola \emph{don't care} $P_{don'tCare} = 0.33$, propadanje pogreške predviđanja $predictionErrorReduction = 0.25$, propadanje dobrote $fitnessReduction = 0.1$.
+Stopa učenja $\beta = 0.2$, stopa propadanja dobrote $\alpha = 0.1$, granica pogreške predviđanja $\epsilon_{0} = 10$, eksponent propadanja dobrote $\nu = 5$, granica prosječnog proteklog vremena prilikom istraživanja novih pravila $\theta_{GA} = 25$, vjerojatnost križanja u dvije točke $\chi = 0.8$, vjerojatnost mutacije $\mu = 0.04$, granica iskustva pri brisanju pravila $\theta_{del} = 20$, postotak srednje vrijednosti dobrote prilikom brisanja $\delta = 0.1$, granica iskustva prilikom obuhvaćanja $\theta_{sub} = 20$, vjerojatnost pojavljivanja simbola \emph{don't care} $P_{don'tCare} = 0.33$, propadanje pogreške predviđanja $predictionErrorReduction = 0.25$, propadanje dobrote $fitnessReduction = 0.1$.
 Veličina turnira prilikom turnirske selekcije je $40\%$ veličine akcijskog skupa.
 Nagrada okoline iznosi 1000 za ispravnu klasifikaciju, a 0 za neispravnu.
 Prilikom generiranja novih programskih isječaka, terminalni čvor ima 50\% vjerojatnosti poprimanja programskog isječka naučenog na nižim razinama.
@@ -768,7 +768,7 @@ Rezultat je očekivan, a vidi se i da između korištenja jednog programskog isj
 Rezultati dobiveni na problemu najzastupljenijeg bita prikazani su na slici \ref{fig:majre}.
 Veličina populacije $N$ ovdje je redom 500, 1000 i 2000 za 3-, 5- i 7-bitni problem.
 Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
-Prostor pretraživanja je ovdje znatno manji od onoga u problemu s multipleksorom, rezultati nisu znatno bolji.
+Prostor pretraživanja je ovdje znatno manji od onoga u problemu s multipleksorom, a rezultati nisu znatno bolji.
 Zanimljivo je primjetiti da je sustav ovdje bolje naučio 7-bitni (slika \ref{fig:7majre}) problem nego 3-bitni (slika \ref{fig:3majre}), a prostor pretraživanja u 7-bitnom problemu je 16 puta veći.
 
 Rezultati na problemu parnog pariteta prikazani su na slici \ref{fig:pare}.
@@ -886,7 +886,7 @@ Navedena funkcionalnost ostvarena je korištenjem sustava LCS.
 Sustav je testiran na problemima multipleksora, većinskog bita, bita prijenosa i parnog pariteta.
 Pokazano je da sustav koristeći prethodno znanje probleme rješava bolje nego učenjem novih problema ispočetka.
 
-\kljucnerijeci{Učeni klasifikacijski sustavi, strojno učenje, podržano učenje, genetski algoritmi, ponovno iskorištavanje znanja.}
+\kljucnerijeci{Sustavi LCS, strojno učenje, podržano učenje, genetski algoritmi, ponovno iskorištavanje znanja.}
 \end{sazetak}
 
 \engtitle{Application of LCS on Classification Problems}
