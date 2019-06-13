@@ -611,7 +611,26 @@ Ako takvo pravilo postoji, $cl$ se ne dodaje u populaciju, nego se pronađenom p
 Postupak provjere jednakosti pravila također je drugačiji u odnosu na klasični sustav XCS.
 Ponovno nije bitno da poredak programskih isječaka u pravilima bude jednak, nego da pravila sadrže jednake isječke, neovisno o poziciji.
 Postupak provjere jednakosti pravila prikazan je algoritmom \ref{alg:eq}.
-\begin{algorithm}
+Da bi pravila bila jednaka, ona moraju zagovarati istu akciju, moraju imati jednak broj simbola \emph{don't care}, a skupovi ostalih programskih isječaka tih pravila moraju biti jednaki.
+
+Prilikom generiranja proizvoljnih programskih isječaka, kao listovi unutar binarnog stabla, osim terminalnih čvorova, koriste se i programski isječci naučeni na jednostavnijim problemima unutar iste domene \citep{4}.
+Po završetku učenja određenog problema, sakupljeni su programski isječci sadržani unutar preciznih i iskusnih pravila konačne populacije.
+Pravilo je precizno i dovoljno iskusno za korištenje pri učenju težeg problema ako je njegovo iskustvo veće od konstante $\theta_{re}$ i ako je njegova dobrota veća od prosječne dobrote konačne populacije.
+Primjer ponovnog korištenja naučenih programskih isječaka prikazan je u tablici \ref{tbl:reuse}.
+U tablici je različitim programskim isječcima dano ime zbog jednostavnijeg referenciranja.
+Vidi se da su isječci naučeni na najjednostavnijem multipleksoru 4/1 korišteni kao listovi unutar isječaka multipleksora 8/1.
+Jednako tako, u multipleksoru 16/1, korišteni su isječci naučeni i na multipleksoru 4/1 i 8/1.
+
+U načinu rada \emph{iskoristi}, sustav XCS se ne mijenja, nego izvršava najbolju moguću akciju.
+Početak je isti kao i u načinu rada \emph{istraži}.
+Formira se podudarni skup koji se sastoji od pravila koja odgovaraju ulazu $s$.
+U ovisnosti o pravilima sadržanim u [\emph{M}], formira se \emph{polje predviđanja}, na isti način kako je opisano u načinu rada \emph{istraži}.
+Na temelju formiranog \emph{polja predviđanja}, odabire se akcija $a$ s najvećom vrijednosti $P(a)$.
+Ovaj odabir je drugačiji od onog opisanog u načinu rada \emph{istraži}, u kojem se akcija $a$ odabire \emph{proporcionalnom selekcijom} u ovisnosti o vrijednosti $P(a)$.
+
+Načini rada \emph{istraži} i \emph{iskoristi} se međusobno izmjenjuju, pri čemu način rada \emph{iskoristi} služi testiranju sposobnosti sustava.
+
+\begin{algorithm}[h]
     \caption{Jednakost pravila}
     \label{alg:eq}
     \begin{algorithmic}
@@ -633,16 +652,8 @@ Postupak provjere jednakosti pravila prikazan je algoritmom \ref{alg:eq}.
         \RETURN{$true$}
     \end{algorithmic}
 \end{algorithm}
-Da bi pravila bila jednaka, ona moraju zagovarati istu akciju, moraju imati jednak broj simbola \emph{don't care}, a skupovi ostalih programskih isječaka tih pravila moraju biti jednaki.
 
-Prilikom generiranja proizvoljnih programskih isječaka, kao listovi unutar binarnog stabla, osim terminalnih čvorova, koriste se i programski isječci naučeni na jednostavnijim problemima unutar iste domene \citep{4}.
-Po završetku učenja određenog problema, sakupljeni su programski isječci sadržani unutar preciznih i iskusnih pravila konačne populacije.
-Pravilo je precizno i dovoljno iskusno za korištenje pri učenju težeg problema ako je njegovo iskustvo veće od konstante $\theta_{re}$ i ako je njegova dobrota veća od prosječne dobrote konačne populacije.
-Primjer ponovnog korištenja naučenih programskih isječaka prikazan je u tablici \ref{tbl:reuse}.
-U tablici je različitim programskim isječcima dano ime zbog jednostavnijeg referenciranja.
-Vidi se da su isječci naučeni na najjednostavnijem 4/1 multipleksoru korišteni kao listovi unutar isječaka 8/1 multipleksora.
-Jednako tako, u 16/1 multipleksoru, korišteni su isječci naučeni i na 4/1 i 8/1 multipleksoru.
-\begin{table}[!htb]
+\begin{table}[!hb]
     \caption{Ponovno korištenje naučenog znanja. Tablica preuzeta iz \citep{4}.}
     \label{tbl:reuse}
     \centering
@@ -660,15 +671,6 @@ Jednako tako, u 16/1 multipleksoru, korišteni su isječci naučeni i na 4/1 i 8
         & ... & ... \\
     \end{tabular}
 \end{table}
-
-U načinu rada \emph{iskoristi}, sustav XCS se ne mijenja, nego izvršava najbolju moguću akciju.
-Početak je isti kao i u načinu rada \emph{istraži}.
-Formira se podudarni skup koji se sastoji od pravila koja odgovaraju ulazu $s$.
-U ovisnosti o pravilima sadržanim u [\emph{M}], formira se \emph{polje predviđanja}, na isti način kako je opisano u načinu rada \emph{istraži}.
-Na temelju formiranog \emph{polja predviđanja}, odabire se akcija $a$ s najvećom vrijednosti $P(a)$.
-Ovaj odabir je drugačiji od onog opisanog u načinu rada \emph{istraži}, u kojem se akcija $a$ odabire \emph{Roulette-Wheel} postupkom u ovisnosti o vrijednosti $P(a)$.
-
-Načini rada \emph{istraži} i \emph{iskoristi} se međusobno izmjenju, pri čemu način rada \emph{iskoristi} služi testiranju sposobnosti sustava.
 
 \chapter{Rezultati} \label{ch:res}
 Prilikom testiranja rada sustava, korištene vrijednosti parametara sustava su podešene kao u \citep{4}.
@@ -763,7 +765,21 @@ S obzirom da je, uvođenjem programskih isječaka umjesto uvjetnih bitova, maknu
 U svrhu testiranja ovisnosti broja programskih isječaka unutar pojedinog pravila i kvalitete XCSCFC sustava, na slici \ref{img:6bitcond} prikazan je graf ponašanja sustava na multipleksoru 4/1 s različitim brojevima programskih isječaka.
 Rezultat je očekivan, a vidi se i da između korištenja jednog programskog isječka i korištenja dva programska isječka u ovom primjeru nema razlike.
 
-\begin{figure}[!h]
+Rezultati dobiveni na problemu najzastupljenijeg bita prikazani su na slici \ref{fig:majre}.
+Veličina populacije $N$ ovdje je redom 500, 1000 i 2000 za 3-, 5- i 7-bitni problem.
+Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
+Prostor pretraživanja je ovdje znatno manji od onoga u problemu s multipleksorom, rezultati nisu znatno bolji.
+Zanimljivo je primjetiti da je sustav ovdje bolje naučio 7-bitni (slika \ref{fig:7majre}) problem nego 3-bitni (slika \ref{fig:3majre}), a prostor pretraživanja u 7-bitnom problemu je 16 puta veći.
+
+Rezultati na problemu parnog pariteta prikazani su na slici \ref{fig:pare}.
+Veličina populacije $N$ redom je 200, 300, 400, 500 za 2-, 3-, 4- i 5-bitni problem.
+Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
+Iz slike se vidi da je problem s 2 bita (slika \ref{fig:2pare}) riješen s jako velikom točnošću, ali zbog toga što je vjerojatno naučen na pamet.
+Iz slike \ref{fig:3pare} se vidi da se već prilikom učenja za 3 bita javljaju problemi.
+
+Rezultati na problemu određivanja bita prijenosa prilikom zbrajanja binarnih brojeva prikazani su grafom na slici \ref{fig:care}.
+
+\begin{figure}
     \centering
     \begin{subfigure}{0.496\textwidth}
         \centering
@@ -786,13 +802,7 @@ Rezultat je očekivan, a vidi se i da između korištenja jednog programskog isj
     \caption{Ponašanje sustava na problemu pronalaska bita s najvećom frekvencijom pojavljivanja.}
     \label{fig:majre}
 \end{figure}
-Rezultati dobiveni na problemu najzastupljenijeg bita prikazani su na slici \ref{fig:majre}.
-Veličina populacije $N$ ovdje je redom 500, 1000 i 2000 za 3-, 5- i 7-bitni problem.
-Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
-Prostor pretraživanja je ovdje znatno manji od onoga u problemu s multipleksorom, rezultati nisu znatno bolji.
-Zanimljivo je primjetiti da je sustav ovdje bolje naučio 7-bitni (slika \ref{fig:7majre}) problem nego 3-bitni (slika \ref{fig:3majre}), a prostor pretraživanja u 7-bitnom problemu je 16 puta veći.
-
-\begin{figure}[!h]
+\begin{figure}
     \centering
     \begin{subfigure}{0.496\textwidth}
         \centering
@@ -821,14 +831,7 @@ Zanimljivo je primjetiti da je sustav ovdje bolje naučio 7-bitni (slika \ref{fi
     \caption{Ponašanje sustava na problemu parnog pariteta.}
     \label{fig:pare}
 \end{figure}
-Rezultati na problemu parnog pariteta prikazani su na slici \ref{fig:pare}.
-Veličina populacije $N$ redom je 200, 300, 400, 500 za 2-, 3-, 4- i 5-bitni problem.
-Broj testnih primjera za svaku veličinu je $5 \cdot 10^{5}$.
-Iz slike se vidi da je problem s 2 bita (slika \ref{fig:2pare}) riješen s jako velikom točnošću, ali zbog toga što je vjerojatno naučen na pamet.
-Iz slike \ref{fig:3pare} se vidi da se već prilikom učenja za 3 bita javljaju problemi.
-Na problemu s 5 bita (\ref{fig:5pare}) sustav nije uspio ništa generalizirati i rezultat je gotovo proizvoljan.
-
-\begin{figure}[!h]
+\begin{figure}
     \centering
     \begin{subfigure}{0.496\textwidth}
         \centering
@@ -857,7 +860,6 @@ Na problemu s 5 bita (\ref{fig:5pare}) sustav nije uspio ništa generalizirati i
     \caption{Ponašanje sustava na problemu bita prijenosa prilikom binarnog zbrajanja.}
     \label{fig:care}
 \end{figure}
-Rezultati na problemu određivanja bita prijenosa prilikom zbrajanja binarnih brojeva prikazani su grafom na slici \ref{fig:care}.
 
 \chapter{Zaključak} \label{ch:zak}
 Susta XCS pokazao se kao vrlo složen, koji za neke probleme (npr. multipleksor) radi iznimno dobro, a za neke (npr. paritet) poprilično loše.
