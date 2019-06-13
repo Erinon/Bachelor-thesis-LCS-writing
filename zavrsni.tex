@@ -2,6 +2,9 @@
 \usepackage{booktabs}
 \usepackage[unicode]{hyperref}
 \usepackage{algorithm}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritam}
+\makeatother
 \usepackage{algorithmic}
 \usepackage{amsmath}
 \usepackage{multirow}
@@ -113,7 +116,7 @@ Svako pravilo predstavlja jednu jedinku.
 Jedinka u \emph{michiganskom stilu} sustava LCS ne predstavlja konačno rješenje sustava, nego je konačno rješenje cijeli skup jedinki, odnosno jedinke djeluju zajedno pri rješavanju problema.
 \emph{Michiganski stil} sustava LCS prvi je formalizirao John Holland 1976. godine, a u suradnji s Judith Reitman 1978. dao njegovu implementaciju.
 S obzirom na složenost originalnog LCS sustava, malo jednostavniju i razumljiviju inačicu dao je Stewart W. Wilson pod nazivom ZCS \engl{"zeroth-level" classifier system}.
-Nakon toga, Wilson je uveo još jednu inačicu suatava LCS pod nazivom XCS, u kojemu je promijenio način na koji se računa $dobrota$ pojedinih pravila.
+Nakon toga, Wilson je uveo još jednu inačicu sustava LCS pod nazivom XCS, u kojemu je promijenio način na koji se računa $dobrota$ pojedinih pravila.
 U sklopu ovog rada obrađen je sustav XCS, koji je detaljno objašnjen u poglavljima koja slijede, a za detaljniji opis prvotnog sustava LCS i sustava ZCS čitatelj se upućuje na \citep{3}.
 
 \begin{figure}[h]
@@ -174,14 +177,14 @@ Upravljački bitovi određuju točno jedan ulazni bit koji se dalje prosljeđuje
 \end{figure}
 Općenito, multipleksor koji ima $k$ upravljačkih bitova funkcionira na isti način.
 $k$ upravljačkih bitova može adresirati $2^{k}$ ulaznih bitova, stoga je multipleksor s $k$ upravljačkih bitova funkcija od $k + 2^{k}$ varijabli.
-Izlaz iz multipleksora je uvijek točno 1 bit, koji ima vrijednost 0 ili 1.
+Izlaz iz multipleksora je uvijek točno jedan bit, koji ima vrijednost 0 ili 1.
 \begin{figure}[h]
     \centering
     \includegraphics[width=5cm]{img/muxex.pdf}
     \caption{Konkretan primjer 4/1 multipleksora.}
     \label{img:muxex}
 \end{figure}
-Na slici \ref{img:muxex} dan je konkretan primjer 4/1 multipleksora.
+Na slici \ref{img:muxex} dan je konkretan primjer multipleksora 4/1.
 Upravljači bitovi ovdje su 01, a ulazni 1010.
 Upravljački bitovi adresiraju drugi ulaz u multipleksor, stoga se on propušta na izlaz.
 Na izlazu vidimo vrijednost 0, koja odgovara drugom ulazu.
@@ -208,7 +211,7 @@ Ako je broj pojavljivanja bita 1 na ulazu paran, broj se treba proširiti bitom 
 Primjer jednog takvog sklopa koji radi za 6-bitne binarne brojeve prikazan je na slici \ref{img:parex}. Prikazani sklop na ulaz prima 6-bitni binarni broj 011010.
 Ulazni podatak ima neparan broj (3) jedinica, dakle treba ga proširiti bitom 1.
 Sklop na izlazu vraća 7-bitni binarni broj \textbf{1}011010 koji ima paran broj (4) jedinica.
-Prilikom rješavanja ovog problema, razvijeni sustav određuje samo prikazani paritetni bit za parni paritet, a ne cijeli novi $n + 1$-bitni broj.
+Prilikom rješavanja ovog problema, razvijeni sustav određuje samo prikazani paritetni bit za parni paritet, a ne cijeli novi $(n + 1)$-bitni broj.
 \begin{figure}[h]
     \centering
     \includegraphics[width=5cm]{img/parity.pdf}
@@ -324,7 +327,7 @@ Algoritam vraća vrijednost $true$ ako svaki programski isječak za zadani ulaz 
 Primjer izgleda jednog opisanog pravila prikazan je na slici \ref{img:clex}.
 Vidimo da zadano pravilo ima 3 uvjetna bita i jedan simbol \emph{don't care}.
 Prikazano pravilo određuje akciju 1.
-Pretpostavimo da iz okoline dobijemo ulaz 011.
+Pretpostavimo da iz okoline dobijemo ulaz $D_{0}D_{1}D_{2} = 011$.
 Ulaz se za zadano pravilo evaluira za svaki uvjetni bit pravila.
 Da bi se ulaz i pravilo mogli podudarati, svaki programski isječak uvjeta pravila mora vratiti 1, u suprotnom se ulaz i pravilo ne podudaraju.
 Prvi programski isječak izvodi funkciju $D_{0}D_{0}\sim|$, što bi se na danom primjeru pretvorilo u $00\sim|$, a to se evaluira u 1.
@@ -372,7 +375,7 @@ Operacija pokrivanja pokreće se za svaku akciju koja nedostaje u [\emph{M}], a 
 Nakon svakog novog dodavanja pravila u [\emph{P}], pokreće se operacija brisanja \citep{1}.
 S obzirom da je potrebno zadržati maksimalnu veličinu populacije $N$, ako je trenutna veličina populacije veća od $N$, izabiru se pravila koja je potrebno izbrisati.
 Operacija brisanja prikazana je algoritmom \ref{del}.
-Pravilo se za brisanje odabire \emph{Roulette-Wheel} postupkom, na temelju glasova koje daje svako pravilo.
+Pravilo se za brisanje odabire \emph{proporcionalnom selekcijom} \engl{Roulette-Wheel selection}, na temelju glasova koje daje svako pravilo.
 \begin{algorithm}
     \caption{Operacija brisanja}
     \label{del}
@@ -412,9 +415,9 @@ Time je osigurano izbacivanje lošijih pravila.
 Iskustvo pravila $cl$ određeno je brojem pojavljivanja tog pravila unutar akcijskog skupa i pamti se u varijabli $cl.exp$.
 Konstanta $\theta_{del}$ određuje granicu iskustva nakon koje se može reći da je pravilo dovoljno iskusno za brisanje.
 Konstanta $\delta$ ($0 < \delta \leq 1$) određuje minimalni postotak prosječne dobrote populacije koju pravilo mora imati da se njegov glas ne bi dodatno povećao.
-Vjerojatnost odabira svakog pravila prilikom \emph{Roulette-Wheel} postupka jednaka je postotku glasa tog pravila u odnosu na ukupnu sumu glasova.
+Vjerojatnost odabira svakog pravila prilikom \emph{proporcionalne selekcije} jednaka je postotku glasa tog pravila u odnosu na ukupnu sumu glasova.
 Nakon što je pravilo $cl$ izabrano za brisanje, provjerava se njegova brojnost sadržana u $cl.n$.
-Ako je njegova brojnost veća od 1, brojnost se umanjuje za 1 i pravilo se ne izbaciju iz populacije.
+Ako je njegova brojnost veća od 1, brojnost se umanjuje za 1 i pravilo se ne izbacuje iz populacije.
 U suprotnom, ako je brojnost 1, pravilo se izbacuje iz populacije.
 
 \begin{algorithm}
@@ -440,7 +443,7 @@ Ona se označava funkcijom $P(a)$ i računa po formuli \eqref{eq:pred}.
     P(a) = \frac{\sum_{cl \in [M] \land cl.a = a} cl.p \cdot cl.F \cdot cl.n}{\sum_{cl \in [M] \land cl.a = a} cl.F \cdot cl.n}
 \end{equation}
 Vrijednosti $P(a)$ za svaku moguću akciju tvore \emph{polje predviđanja}.
-Ovisno o vrijednostima $P(a)$, \emph{Roulette-Wheel} postupkom se izabire konačna akcija koju sustav izvršava\footnote{Akcija može biti izabrana i nekim drugim postupkom, npr. proizvoljno \engl{pure exploration} ili se može odabrati akcija s najvećom $P(a)$ vrijednosti \engl{pure exploitation}.
+Ovisno o vrijednostima $P(a)$, \emph{proporcionalnom selekcijom} se izabire konačna akcija koju sustav izvršava\footnote{Akcija može biti izabrana i nekim drugim postupkom, npr. proizvoljno \engl{pure exploration} ili se može odabrati akcija s najvećom $P(a)$ vrijednosti \engl{pure exploitation}.
 Također, može se koristiti proizvoljna akcija s određenom vjerojatnošću, a u suprotnom najbolja.
 Takav postupak odgovarao bi \emph{$\epsilon$-pohlepnom} \engl{$\epsilon$-greedy} postupku odabira u podržanom učenju, gdje bi $\epsilon$ vrijednost odgovarala vjerojatnosti odabira proizvoljne akcije, kako je navedeno u \citep{1}.}.
 Vjerojatnost da će akcija $a$ biti izabrana proporcionalna je vrijednosti $P(a)$.
@@ -451,18 +454,18 @@ Nakon formiranja akcijskog seta izvršava se odabrana akcija $a$ i u ovisnosti o
 
 Po dobitku nagrade, dolazi do ažuriranja parametara svih pravila sadržanih u [\emph{A}].
 Redom se ažuriraju iskustvo pravila \engl{experience} $exp$, njegovo predviđanje \engl{prediction} $p$, pogreška u predviđanju \engl{rediction error} $\epsilon$, preciznost \engl{accuracy} $\kappa$, relativna preciznost \engl{relative accuracy} $\kappa'$, dobrota $F$ i prosječna veličina akcijskih skupova koji su sadržavali to pravilo \engl{action set size} $as$.
-Iskustvo pravila $cl$, $cl.exp$, je broj pojavljivanja $cl$ u akcijskom skupu i ažurira se po formuli \eqref{eq:exp}.
+Iskustvo pravila $cl$, $cl.exp$, je broj pojavljivanja $cl$ u akcijskom skupu i ažurira se po izrazu \eqref{eq:exp}.
 \begin{equation}
     \label{eq:exp}
     cl.exp := cl.exp + 1
 \end{equation}
 Predviđanje pravila, $cl.p$ procjenjuje nagradu koju sustav očekuje podudaranjem pravila i izvođenjem akcije koju ono zagovara.
-Ažurira se po uzoru na Q-učenje, u ovisnosti o dobivenoj nagradi $R$, po formuli \eqref{eq:p}, gdje je $\beta$ realan broj iz intervala $(0, 1]$ i naziva se stopa učenja \engl{learning rate}.
+Ažurira se po uzoru na Q-učenje, u ovisnosti o dobivenoj nagradi $R$, po izrazu \eqref{eq:p}, gdje je $\beta$ realan broj iz intervala $(0, 1]$ i naziva se stopa učenja \engl{learning rate}.
 \begin{equation}
     \label{eq:p}
     cl.p := cl.p + \beta \cdot (R - cl.p)
 \end{equation}
-Pogreška u predviđanju ažurira se u ovisnosti o nagradi $R$ i predviđanju pravila $p$ po formuli \eqref{eq:err}.
+Pogreška u predviđanju ažurira se u ovisnosti o nagradi $R$ i predviđanju pravila $p$ po izrazu \eqref{eq:err}.
 \begin{equation}
     \label{eq:err}
     cl.\epsilon := cl.\epsilon + \beta \cdot (|R - cl.p| - cl.\epsilon)
@@ -482,9 +485,9 @@ Prije ažuriranja dobrote $F$ pravila, najprije je potrebno izračunati njegovu 
 \end{equation}
 Pri tome, parametri $\alpha$ $(0 < \alpha < 1)$ i $\nu$ $(\nu > 0)$ kontroliraju brzinu propadanja preciznosti \citep{5}.
 Parametar $\epsilon_{0}$ određuje granicu do koje najviše može doći pogreška u predviđanju $\epsilon$, a da bi se za pravilo moglo reći da je potpuno precizno.
-Ako za pravilo $cl$ vrijedi da je $cl.\epsilon < \epsilon_{0}$, njegova preciznost postaje 1 ($cl.\kappa = 1$), a u suprotnom preciznost ekponencijalno opada ovisno o parametrima $\alpha$ i $\nu$, što je prikazano formulom \eqref{eq:acc}.
-Nakon što su izračunate preciznosti svih pravila unutar akcijskog seta [\emph{A}], svaka preciznost se normira ukupnom sumom preciznosti, kao što je prikazano formulom \eqref{eq:racc}.
-Kada je izračunata relativna preciznost, dobrota se ažurira prema formuli \eqref{eq:fit}.
+Ako za pravilo $cl$ vrijedi da je $cl.\epsilon < \epsilon_{0}$, njegova preciznost postaje 1 ($cl.\kappa = 1$), a u suprotnom preciznost ekponencijalno opada ovisno o parametrima $\alpha$ i $\nu$, što je prikazano izrazom \eqref{eq:acc}.
+Nakon što su izračunate preciznosti svih pravila unutar akcijskog seta [\emph{A}], svaka preciznost se normira ukupnom sumom preciznosti, kao što je prikazano izrazom \eqref{eq:racc}.
+Kada je izračunata relativna preciznost, dobrota se ažurira prema izrazu \eqref{eq:fit}.
 \begin{equation}
     \label{eq:fit}
     cl.F := cl.F + \beta \cdot (\kappa' - cl.F)
@@ -500,13 +503,13 @@ Na slici \ref{img:fit} vidi se utjecaj pojedinih parametara prilikom računanja 
 Parametar $\epsilon_{0}$ određuje do koje granice će pravila imati jednaku, maksimalnu, preciznost, parametar $\alpha$ uvodi značajnu razliku između preciznih i manje preciznih pravila, a parametri $\nu$ i ponovno $\epsilon_{0}$ određuju brzinu opadanja preciznosti.
 
 Nakon postavljanja parametara, postoji mogućnost za pokretanjem operacije istraživanja novih pravila \engl{discovery component}.
-Svako pravilo dodatno sadrži i parametar koji pamti kada je zadnji put ono sudjelovao u akcijskom setu nad kojim se provela operacija istraživanja novih pravila.
+Svako pravilo dodatno sadrži i parametar koji pamti kada je zadnji put ono sudjelovalo u akcijskom skupu nad kojim se provela operacija istraživanja novih pravila.
 Operacija otkrivanja novih pravila provodi se ukoliko je prosječno vrijeme proteklo od prošlog pokretanja operacije otkrivanja nad pravilima unutar akcijskog skupa veće od vremena određenog konstantom $\theta_{GA}$.
 Ukoliko to nije zadovoljeno, ovaj se korak preskače.
 
 Prilikom operacije otkrivanja, najprije se iz akcijskog skupa izabiru dva roditeljska pravila.
 Odabir roditeljskih pravila ostvaren je turnirskom selekcijom \engl{tournament selection} u ovisnosti o parametru dobrote.
-Prilikom turnirske selekcije, nasumično se odabire unaprijed zadani broj pravila, te se kao pobjednika odabire onaj koji od odabranih ima najveću vrijednost dobrote.
+Prilikom turnirske selekcije, nasumično se odabire unaprijed zadani broj pravila, te se kao pobjednika odabire ono koje od odabranih ima najveću vrijednost dobrote.
 Od izabranih roditeljskih pravila stvaraju se dva potomka, od kojih prvotno svaki ima iste programske isječke uvjeta kao jedan od roditelja.
 
 Nakon toga, s vjerojatnošću $\chi$ provodi se križanje potomaka.
@@ -537,24 +540,24 @@ Mutacija, za razliku od križanja, djeluje i na uvjete pravila i na akcije.
 Tijekom mutacije, svaki simbol \emph{don't care} zamjenjuje se proizvoljno generiranim programskim isječkom koji odgovara stanju $s$ dobivenom iz okoline, a svaki drugi programski isječak zamjenjuje se simbolom \emph{don't care}.
 Na poslijetku, akcije potomaka također bivaju mutirane s vjerojatnošću $\mu$, pri čemu se akcija mijenja u bilo koju drugu akciju (u ovom radu su jedine moguće akcije 0 ili 1, stoga 0 postaje 1, a 1 postaje 0).
 Nakon mutacije, mutirani potomak još uvijek odgovara stanju $s$.
-Operacija mutacije prikazana je algoritmom \ref{alg:mut}
+Operacija mutacije prikazana je algoritmom \ref{alg:mut}.
 \begin{algorithm}[h]
     \caption{Mutacija}
     \label{alg:mut}
     \begin{algorithmic}
-        \STATE{\textbf{Ulaz:} $cl$ -- klasifikator nad kojim se provodi mutacija, $s$ -- stanje okoline.}
+        \STATE{\textbf{Ulaz:} $cl$ -- pravilo nad kojim se provodi mutacija, $s$ -- stanje okoline.}
         \STATE{\textbf{Izlaz:} -}
         \FOR{$(i = 1; i <= n; i = i + 1)$}
         \STATE{$r :=$ proizvoljan decimalni broj iz intervala [0, 1)}
         \IF{$r < \mu$}
-        \IF{$cl.cond[i] =$ \emph{don't care} simbol}
+        \IF{$cl.cond[i] =$ simbol \emph{don't care}}
         \REPEAT
         \STATE{$cf$ := generiraj proizvoljni programski isječak}
         \STATE{$val := evaluiraj(cf, s)$}
         \UNTIL{$val \neq 1$}
         \STATE{$cl.cond[i] := cf$}
         \ELSE
-        \STATE{$cl.cond[i]$ := \emph{don't care} simbol}
+        \STATE{$cl.cond[i]$ := simbol \emph{don't care}}
         \ENDIF
         \ENDIF
         \ENDFOR
@@ -575,15 +578,15 @@ Konstanta $\theta_{sub}$ sadrži donju granicu iskustva pravila da bi se za njeg
 Roditelj može obuhvatiti potomka ako oba pravila zagovaraju istu akciju, ako je roditelj precizan i dovoljno iskusan i ako je roditelj općenitiji od potomka.
 Uvođenjem programskih isječaka umjesto simbola ternarne abecede u uvjete pravila, maknuta je važnost poretka programskih isječaka unutar uvjeta.
 Iz tog razloga, prilikom ispitivanja je li roditelj općenitiji od djeteta u obzir su uzeti skupovi programskih odsječaka \citep{4}.
-Operacija provjere je li jedno pravilo općenitije od drugog prikazana je algoritmom \ref{alg:general}
+Operacija provjere je li jedno pravilo općenitije od drugog prikazana je algoritmom \ref{alg:general}.
 \begin{algorithm}
     \caption{Općenitije pravilo}
     \label{alg:general}
     \begin{algorithmic}
         \STATE{\textbf{Ulaz:} $cl_{1}$ -- općenitije pravilo, $cl_{2}$ -- specifičnije pravilo.}
         \STATE{\textbf{Izlaz:} -- je li pravilo $cl_{1}$ općenitije od $cl_{2}$}
-        \STATE{$x :=$ broj \emph{don't care} simbola u $cl_{1}$}
-        \STATE{$y :=$ broj \emph{don't care} simbola u $cl_{2}$}
+        \STATE{$x :=$ broj simbola \emph{don't care} u $cl_{1}$}
+        \STATE{$y :=$ broj simbola \emph{don't care} u $cl_{2}$}
         \IF{$x \leq y$}
         \RETURN{$false$}
         \ENDIF
@@ -682,37 +685,37 @@ Sva testiranja odrađena su na AMD A10-8700p četverojezgrenom procesoru frekven
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/6muxre.pdf}
-        \caption{4/1 multipleksor.}
+        \caption{Multipleksor 4/1.}
         \label{fig:6muxre}
     \end{subfigure}
     %\hspace{0.05\textwidth}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/11muxre.pdf}
-        \caption{8/1 multipleksor.}
+        \caption{Multipleksor 8/1.}
         \label{fig:11muxre}
     \end{subfigure}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/20muxre.pdf}
-        \caption{16/1 multipleksor.}
+        \caption{Multipleksor 16/1.}
         \label{fig:20muxre}
     \end{subfigure}
     %\hspace{0.05\textwidth}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/37muxre.pdf}
-        \caption{32/1 multipleksor.}
+        \caption{Multipleksor 32/1.}
         \label{fig:37muxre}
     \end{subfigure}
     \caption{Ponašanje sustava na problemu multipleksora s iskorištavanjem već naučenog znanja.}
     \label{fig:muxre}
 \end{figure}
 Na slici \ref{fig:muxre} prikazani su grafovi ponašanja sustava na problemu multipleksora.
-Veličina populacije $N$ redom je 500, 1000, 2000, 5000 za 4/1, 8/1, 16/1 odnosno 32/1 multipleksor.
-4/1, 8/1 i 16/1 multipleksori trenirani su na $5 \cdot 10^{5}$ testnih primjera, a 32/1 na $10^{6}$.
-Treniranje za 4/1, 8/1 i 16/1 multipleksor trajalo je ukupno oko 7 minuta, dok je treniranje 32/1 multipleksora trajalo otprilike 50 minuta.
-Broj mogućih različitih primjera 32/1 multipleksora je $2^{37} \approx 10^{11}$.
+Veličina populacije $N$ redom je 500, 1000, 2000, 5000 za multipleksore 4/1, 8/1, 16/1 i 32/1.
+Multipleksori 4/1, 8/1 i 16/1 trenirani su na $5 \cdot 10^{5}$ testnih primjera, a 32/1 na $10^{6}$.
+Treniranje za multipleksore 4/1, 8/1 i 16/1 trajalo je ukupno oko 7 minuta, dok je treniranje multipleksora 32/1  trajalo otprilike 50 minuta.
+Broj mogućih različitih primjera multipleksora 32/1 je $2^{37} \approx 10^{11}$.
 Iz slike \ref{fig:37muxre} se vidi da je već nakon otprilike $3 \cdot 10^{5}$ testnih primjera točnost sustava oko 90\% iako je prostor pretraživanja jako velik, XCSCFC se na njemu ponaša poprilično dobro.
 
 \begin{figure}[!h]
@@ -720,35 +723,35 @@ Iz slike \ref{fig:37muxre} se vidi da je već nakon otprilike $3 \cdot 10^{5}$ t
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/6muxnre.pdf}
-        \caption{4/1 multipleksor.}
+        \caption{Multipleksor 4/1.}
         \label{fig:6muxnre}
     \end{subfigure}
     %\hspace{0.05\textwidth}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/11muxnre.pdf}
-        \caption{8/1 multipleksor.}
+        \caption{Multipleksor 8/1.}
         \label{fig:11muxnre}
     \end{subfigure}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/20muxnre.pdf}
-        \caption{16/1 multipleksor.}
+        \caption{Multipleksor 16/1.}
         \label{fig:20muxnre}
     \end{subfigure}
     %\hspace{0.05\textwidth}
     \begin{subfigure}{0.496\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/multiplexer/37muxnre.pdf}
-        \caption{32/1 multipleksor.}
+        \caption{Multipleksor 32/1.}
         \label{fig:37muxnre}
     \end{subfigure}
     \caption{Ponašanje sustava na problemu multipleksora bez iskorištavanja već naučenog znanja.}
     \label{fig:muxnre}
 \end{figure}
-S obzirom da je, izmeđuostalog, cilj rada bio prikazati kako radi ponovno iskorištavanje naučenog znanja na manjim problemima, za usporedbu, na slici \ref{fig:muxnre} prikazan je graf ponašanja sustava na problemu multipleksora, ali bez korištenja prethodno stečenog znanja.
+S obzirom da je, između ostalog, cilj rada bio prikazati kako radi ponovno iskorištavanje naučenog znanja na manjim problemima, za usporedbu, na slici \ref{fig:muxnre} prikazan je graf ponašanja sustava na problemu multipleksora, ali bez korištenja prethodno stečenog znanja.
 Ovdje je svaki multipleksor učen od nule, bez znanja o manjim multipleksorima.
-Posebno je zanimljivo pogledati sliku \ref{fig:37muxnre} iz koje se vidi da u ovom slučaju, na primjeru 32/1 multipleksora, sustav nije naučio gotovo ništa, nasuprot vrlo dobrom rezultatu prilikom učenja 32/1 multipleksora uz korištenje prethodno stečenog znanja.
+Posebno je zanimljivo pogledati sliku \ref{fig:37muxnre} iz koje se vidi da u ovom slučaju, na primjeru multipleksora 32/1, sustav nije naučio gotovo ništa, nasuprot vrlo dobrom rezultatu prilikom učenja multipleksora 32/1 uz korištenje prethodno stečenog znanja.
 
 \begin{figure}[!h]
     \centering
@@ -757,7 +760,7 @@ Posebno je zanimljivo pogledati sliku \ref{fig:37muxnre} iz koje se vidi da u ov
     \label{img:6bitcond}
 \end{figure}
 S obzirom da je, uvođenjem programskih isječaka umjesto uvjetnih bitova, maknuta ovisnost duljine ulaza dobivenog od okoline i broja uvjetnih bitova unutar pravila, prilikom korištenja XCSCFC sustava moguće je imati broj programskih isječaka različit od veličine ulaza.
-U svrhu testiranja ovisnosti broja programskih isječaka unutar pojedinog pravila i kvalitete XCSCFC sustava, na slici \ref{img:6bitcond} prikazan je graf ponašanja sustava na 4/1 multipleksoru s različitim brojevima programskih isječaka.
+U svrhu testiranja ovisnosti broja programskih isječaka unutar pojedinog pravila i kvalitete XCSCFC sustava, na slici \ref{img:6bitcond} prikazan je graf ponašanja sustava na multipleksoru 4/1 s različitim brojevima programskih isječaka.
 Rezultat je očekivan, a vidi se i da između korištenja jednog programskog isječka i korištenja dva programska isječka u ovom primjeru nema razlike.
 
 \begin{figure}[!h]
@@ -888,9 +891,9 @@ Pokazano je da sustav koristeći prethodno znanje probleme rješava bolje nego u
 \begin{abstract}
 To succesfully solve a large-scale problems there has been a need for a new, different approach, due to the large time and space complexity.
 In this work, knowledge extraction from smaller problems and its reuse in more complex problems has been achieved.
-The proposed functionality has been achived on the LCS system.
+The proposed functionality has been achieved on the LCS system.
 The system is tested on multiplexer problems, majority-on problems, carry problems and even-parity problems.
-It is shown that better results are achived while using the extracted knowledge than when every problem is learned from scratch.
+It is shown that better results are achieved while using the extracted knowledge than when every problem is learned from scratch.
 
 
 \keywords{Learning classifier systems, machine learning, reinforcement learning, genetic algorithms, knowledge reuse.}
